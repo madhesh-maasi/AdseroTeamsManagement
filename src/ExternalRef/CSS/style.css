@@ -1,0 +1,303 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Nunito Sans", sans-serif;
+}
+#workbenchPageContent {
+  max-width: 100%;
+}
+
+.ControlZone--emphasisBackground,
+.CanvasZoneContainer {
+  background-color: transparent !important;
+}
+
+.content_3f3fd3c2,
+.CanvasZone {
+  padding: 0 !important;
+  max-width: 100% !important;
+}
+
+.ToolbarButtonTooltip {
+  display: none;
+}
+
+.Canvas {
+  margin: 0 !important;
+}
+.banner-image {
+  background: url(../Images/Langing-banner.jpg);
+  height: 600px;
+  background-position: center;
+  background-size: cover;
+}
+.banner-caps {
+  color: #fff;
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+.right {
+  width: 300px;
+  background: #fff;
+  height: 95%;
+  margin: 16px 16px 16px auto;
+  padding: 16px 16px 0 16px !important;
+}
+.left {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+.right .carousel {
+  height: 100%;
+}
+.right .carousel-indicators li {
+  width: 6px !important;
+  height: 6px !important;
+  background-color: #b1b1b1 !important;
+  border-radius: 50%;
+}
+.right .carousel-indicators li.active {
+  width: 8px !important;
+  height: 8px !important;
+  background-color: #8a8a8a !important;
+}
+.carousel-indicators {
+  align-items: center;
+}
+.right .carousel-caption {
+  color: #000;
+  position: static !important;
+  text-align: left;
+  padding: 10px 0 !important;
+}
+.caro-slogo {
+  background: url(../Images/SLogo.png);
+  background-position: center;
+  background-size: cover;
+  width: 40px;
+  height: 40px;
+  margin-top: 20px;
+}
+.caro-image {
+  height: 280px;
+}
+.caro-image img {
+  height: 280px;
+}
+/* .right {
+  max-width: 20% !important;
+} */
+.carousel-control-prev,
+.carousel-control-next {
+  display: none !important;
+}
+.right .carousel-caption h3 {
+  color: #b38c58;
+  font-size: 21px;
+  font-weight: 700;
+}
+.right .carousel-caption p {
+  font-style: italic;
+  margin-bottom: 0;
+}
+.btn-theme-lg {
+  background: #b38c58 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin-left: auto !important;
+}
+@media screen and (max-width: 768px) {
+  .left {
+    display: none;
+  }
+  .banner-image {
+    background: none;
+    height: 520px;
+  }
+  .right {
+    margin: auto;
+    width: 90%;
+    height: 100%;
+    padding: 40px;
+    background: #f9f3eb;
+    /* margin: 10px; */
+  }
+}
+.tile-section {
+  margin-top: 20px;
+}
+/* .tile-section .col-lg-3 {
+  max-width: 24% !important;
+  padding: 12px;
+  margin: 0 5px 10px 5px;
+  transition: transform 0.2s;
+  box-shadow: 0px 0px 5px 1px rgba(137, 137, 137, 0.64);
+  -webkit-box-shadow: 0px 0px 5px 1px rgba(137, 137, 137, 0.64);
+  -moz-box-shadow: 0px 0px 5px 1px rgba(137, 137, 137, 0.64);
+}
+.tile-section .col-lg-3:hover {
+  transform: scale(1.02);
+} */
+/* Test */
+.tile-section .col-sm-12,
+.col-md-6,
+.col-lg-3,
+.col-xl-4 {
+  padding: 10px !important;
+}
+.tile-section .tile {
+  width: 100%;
+  padding: 12px;
+  transition: transform 0.2s;
+  box-shadow: 0px 0px 5px 1px rgba(137, 137, 137, 0.64);
+  -webkit-box-shadow: 0px 0px 5px 1px rgba(137, 137, 137, 0.64);
+  -moz-box-shadow: 0px 0px 5px 1px rgba(137, 137, 137, 0.64);
+}
+.tile-section .tile:hover {
+  transform: scale(1.02);
+}
+/* Test */
+.tile-title-section {
+  display: flex;
+  /* padding: 10px; */
+}
+.tile-section .tile-header h2 {
+  font-size: 18px;
+  color: #b38c58;
+  font-weight: 700;
+  margin-bottom: 0 !important;
+}
+.tile-section .tile-logo {
+  background: url(../Images/SLogo.png);
+  background-position: center;
+  background-size: cover;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+.tile-section .row {
+  margin: auto !important;
+}
+.btn-primary {
+  background-color: #b38c58 !important;
+  color: #fff !important;
+  border-color: #b38c58 !important;
+  border-radius: 0 !important;
+}
+.btn-secondary {
+  color: #7a7a7a !important;
+  border: 1px solid #7a7a7a !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+.tile-btn-section .btn-sm {
+  font-size: 12px !important;
+}
+.tile-btn-section button {
+  margin: 0 5px !important;
+}
+@media screen and (max-width: 768px) {
+}
+button.btn {
+  cursor: pointer;
+}
+.modal-dialog {
+  max-width: 600px !important;
+}
+.modal-header button {
+  display: none;
+}
+.capacity-modal .modal-title {
+  margin: auto;
+}
+.modal-title {
+  color: #b38c58;
+  font-weight: bold;
+  font-size: 20px;
+}
+.modal-content {
+  border-radius: 0 !important;
+}
+.cur-user-info {
+  margin-bottom: 20px;
+}
+.user-dp {
+  margin-left: 6px;
+  border-radius: 50%;
+}
+.modal-header {
+  border-bottom: none !important;
+}
+.modal-footer {
+  padding: 0 40px 20px 40px !important;
+  border-top: none !important;
+}
+.modal-body {
+  padding: 0 40px !important;
+}
+.status-btn {
+  text-align: center;
+  padding: 24px 20px;
+  margin: 20px 0 0 0;
+  box-shadow: 0px 0px 5px 1px rgba(137, 137, 137, 0.64);
+  -webkit-box-shadow: 0px 0px 5px 1px rgba(137, 137, 137, 0.64);
+  -moz-box-shadow: 0px 0px 5px 1px rgba(137, 137, 137, 0.64);
+}
+.btn-status {
+  width: 100px;
+  margin: 0 8px;
+}
+
+.btn-status.btn-full {
+  background: transparent;
+  color: #ff7a7a;
+  border: 1px solid #ff7a7a;
+}
+.btn-status.btn-full.active {
+  color: #fff;
+  background: #ff7a7a;
+}
+.btn-status.btn-medium {
+  background: transparent;
+  color: #ffbb54;
+  border: 1px solid #ffbb54;
+}
+.btn-status.btn-medium.active {
+  color: #fff;
+  background: #ffbb54;
+}
+.btn-status.btn-low {
+  background: transparent;
+  color: #63d86f;
+  border: 1px solid #63d86f;
+}
+.btn-status.btn-low.active {
+  color: #fff;
+  background: #63d86f;
+}
+.btn-status.btn-off {
+  background: transparent;
+  color: #7a7a7a;
+  border: 1px solid #7a7a7a;
+}
+.btn-status.btn-off.active {
+  color: #fff;
+  background: #7a7a7a;
+}
+.status-btn-notes {
+  color: #3b6394;
+  font-style: italic;
+  margin-bottom: 20px;
+}
+.capacity-modal textarea {
+  height: 100px !important;
+  border-radius: 0;
+  resize: none;
+}
+.capacity-modal label {
+  color: #b38c58;
+}
