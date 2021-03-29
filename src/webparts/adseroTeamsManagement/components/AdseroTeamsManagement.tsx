@@ -38,6 +38,8 @@ let tempUserDp = {
     tilesItems:any;
     currentUserGroups:any;
     showCapacityModal:boolean;
+    capacityValue:string;
+    currentUserProfileUrl:string;
   }
 var slides=[];
 var tilesArray=[];
@@ -50,7 +52,18 @@ export default class AdseroTeamsManagement extends React.Component<IAdseroTeamsM
       },
     });
 
-    this.state = { activeIndex: 0 ,CarouselItems:[],allUsers:[],allProfilePics:[],currentUserDetails:[],currentUserGroups:[],tilesItems:[],showCapacityModal:false};
+    this.state = {
+       activeIndex: 0 ,
+       CarouselItems:[],
+       allUsers:[],
+       allProfilePics:[],
+       currentUserDetails:[],
+       currentUserGroups:[],
+       tilesItems:[],
+       showCapacityModal:false,
+       capacityValue:"" ,
+       currentUserProfileUrl:""    
+      };
     this.loadProfilepics();
     this.loadUsersBirthday();
     this.getCurrentUserDetails();
@@ -172,7 +185,21 @@ export default class AdseroTeamsManagement extends React.Component<IAdseroTeamsM
     this.setState({ activeIndex: newIndex });
   }
 
-  public capacityToggle = () => this.setState({ showCapacityModal: !this.state.showCapacityModal});;
+  public capacityCheck(e)
+  {
+     this.setState({capacityValue:e.target.innerText });
+  }
+
+  public  capacityToggle = async() => {
+  
+    const user1= await sp.web.siteUsers.getByEmail(this.state.currentUserDetails.mail).get().then(async(userId)=>{
+      var profileUrl=this.state.allProfilePics.filter((eachPro)=>{return eachPro.ListItemAllFields.UserNameId==userId.Id});
+     this.setState({ currentUserProfileUrl:profileUrl[0].ServerRelativeUrl,showCapacityModal: !this.state.showCapacityModal});
+
+    });
+    
+  
+  };
 
   public render(): React.ReactElement<IAdseroTeamsManagementProps> {
     return (
@@ -240,14 +267,14 @@ export default class AdseroTeamsManagement extends React.Component<IAdseroTeamsM
         <ModalHeader toggle={this.capacityToggle} className="text-center">Add or Edit Allocation</ModalHeader>   
         <ModalBody>
            <div className="cur-user-info text-right">
-             <span>Hi, Maasi</span>   
-             <img src = {tempUserDp.dp} alt="" className="user-dp" width="40" height="40"/>  
+             <span>Hi, {this.state.currentUserDetails.displayName}</span>   
+             <img src = {this.state.currentUserProfileUrl} alt="" className="user-dp" width="40" height="40"/>  
            </div> 
            <div className="status-btn">     
-             <button className="btn-status btn-full">Full</button>
-             <button className="btn-status btn-medium">Medium</button>
-             <button className="btn-status btn-low">Low</button>
-             <button className="btn-status btn-off">Off</button>
+             <button className={"btn-status btn-full "+(this.state.capacityValue=="Full"?"active":"")} onClick={(e)=>this.capacityCheck.call(this,e)}>Full</button>
+             <button className={"btn-status btn-medium "+(this.state.capacityValue=="Medium"?"active":"")} onClick={(e)=>this.capacityCheck.call(this,e)}>Medium</button>
+             <button className={"btn-status btn-low "+(this.state.capacityValue=="Low"?"active":"")} onClick={(e)=>this.capacityCheck.call(this,e)}>Low</button>
+             <button className={"btn-status btn-off "+(this.state.capacityValue=="Off"?"active":"")} onClick={(e)=>this.capacityCheck.call(this,e)}>Off</button>
            </div>
            <div className="status-btn-notes">Please choose your capacity  level.</div> 
            <FormGroup>
