@@ -124,7 +124,7 @@ export interface ICapacityDashboardState {
   capselectedUsermail: string;
   CapacityChartData: any;
   CapSelectedUserName: string;
-  CapShowChart:Boolean;
+  CapShowChart: Boolean;
 }
 
 export default class AdseroTeamsManagement extends React.Component<
@@ -152,7 +152,7 @@ export default class AdseroTeamsManagement extends React.Component<
       capselectedUsermail: "",
       CapacityChartData: {},
       CapSelectedUserName: "",
-      CapShowChart:false
+      CapShowChart: false,
     };
 
     this.getTableData();
@@ -221,7 +221,7 @@ export default class AdseroTeamsManagement extends React.Component<
         .get()
         .then((item: any) => {
           this.setState({
-            CapShowChart:true,
+            CapShowChart: true,
             CapacityChartData: {
               labels: ["Full", "Medium", "Low", "Off"],
               datasets: [
@@ -342,23 +342,25 @@ export default class AdseroTeamsManagement extends React.Component<
             </div>
             <div className="filter-row">
               <div className="ppicker-input">
-                <PeoplePicker
-                  context={this.props.spcontext as any}
-                  titleText=""
-                  placeholder="Search User"
-                  personSelectionLimit={1}
-                  groupName={""}
-                  defaultSelectedUsers={this.state.allpeoplePicker_User}
-                  showtooltip={false}
-                  required={true}
-                  disabled={false}
-                  ensureUser={true}
-                  onChange={(e) => this.CapacityChartSearch.call(this, e)}
-                  showHiddenInUI={false}
-                  principalTypes={[PrincipalType.User]}
-                  resolveDelay={1000}
-                />{" "}
-              </div>
+              {/* <label>Employee </label> */}
+                <div className="CapSummaryPPickerStyle"><PeoplePicker
+                
+                context={this.props.spcontext as any}
+                titleText=""
+                placeholder="Search User"
+                personSelectionLimit={1}
+                groupName={""}
+                defaultSelectedUsers={this.state.allpeoplePicker_User}
+                showtooltip={false}
+                required={true}
+                disabled={false}
+                ensureUser={true}
+                onChange={(e) => this.CapacityChartSearch.call(this, e)}
+                showHiddenInUI={false}
+                principalTypes={[PrincipalType.User]}
+                resolveDelay={1000}
+              />{" "}</div>
+              </div> 
               <div className="startDate">
                 <label>Start Date</label>
                 <DatePicker
@@ -367,7 +369,7 @@ export default class AdseroTeamsManagement extends React.Component<
                   value={this.state.StartDateValue}
                   onChange={(v, f) => this.StartDateChange(v, f)}
                 />
-              </div>
+              </div>       
               <div className="endDate">
                 <label>End Date</label>
                 <DatePicker
@@ -388,23 +390,25 @@ export default class AdseroTeamsManagement extends React.Component<
                   className="btn btn-theme-secondary btn-clear"
                   onClick={() => {
                     this.setState({
-                      StartDateValue:"",
-                      EndDateValue:"",
-                      capselectedUsermail:"",
-                      CapShowChart:false,
+                      StartDateValue: "",
+                      EndDateValue: "",
+                      capselectedUsermail: "",
+                      CapShowChart: false,
                       CapacityChartData: {},
                       CapSelectedUserName: "",
-                      allpeoplePicker_User:[]
+                      allpeoplePicker_User: [],
                     });
                   }}
-                >
+                >   
                   Clear
                 </button>
               </div>
             </div>
             <div className="piechart-section">
               {this.state.CapShowChart == false ? (
-                <div><h2>No Datas Found</h2></div> 
+                <div>
+                  <h2>No Datas Found</h2>
+                </div>
               ) : (
                 <div>
                   <h2>{this.state.CapSelectedUserName}</h2>

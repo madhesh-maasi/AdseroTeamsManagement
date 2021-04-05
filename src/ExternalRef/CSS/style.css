@@ -5,6 +5,7 @@
   box-sizing: border-box;
   font-family: "Nunito Sans", sans-serif;
 }
+/* Workbench */
 #workbenchPageContent {
   max-width: 100%;
 }
@@ -27,7 +28,10 @@
 .Canvas {
   margin: 0 !important;
 }
+/* Workbench */
+
 .banner-image {
+  width: 100%;
   background: url(../Images/Langing-banner.jpg);
   height: 600px;
   background-position: center;
@@ -130,19 +134,7 @@
 .tile-section {
   margin-top: 20px;
 }
-/* .tile-section .col-lg-3 {
-  max-width: 24% !important;
-  padding: 12px;
-  margin: 0 5px 10px 5px;
-  transition: transform 0.2s;
-  box-shadow: 0px 0px 5px 1px rgba(137, 137, 137, 0.64);
-  -webkit-box-shadow: 0px 0px 5px 1px rgba(137, 137, 137, 0.64);
-  -moz-box-shadow: 0px 0px 5px 1px rgba(137, 137, 137, 0.64);
-}
-.tile-section .col-lg-3:hover {
-  transform: scale(1.02);
-} */
-/* Test */
+
 .tile-section .col-sm-12,
 .col-md-6,
 .col-lg-3,
@@ -380,6 +372,7 @@ div[data-tag="allowRowEvents"] {
   display: flex;
   width: 90%;
   margin: auto;
+  flex-wrap: wrap;
 }
 .summary-head {
   width: 90%;
@@ -403,20 +396,22 @@ div[data-tag="allowRowEvents"] {
   display: none !important;
 }
 .ppicker-input {
-  width: 250px;
+  width: 100%;
   align-self: center;
-  margin-right: 12px;
+  /* margin-right: 12px; */
 }
 .filter-row {
   width: 90%;
   margin: 20px auto;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 .startDate,
 .endDate {
   display: flex;
   align-items: center;
-  margin: 0 12px;
+  /* margin: 0 12px; */
 }
 .filter-row input#rdp-form-control-startdatepicker,
 .filter-row input#rdp-form-control-enddatepicker {
@@ -448,4 +443,26 @@ button.btn.btn-theme-secondary {
 .piechart-section h2 {
   text-align: center;
   color: #b38c58;
+}
+.CapSummaryPPickerStyle {
+  width: 100%;
+}
+@media screen and (max-width: 768px) {
+  .btn-status {
+    margin: 6px;
+  }
+  .status-btn {
+    margin: 0;
+  }
+  .dashboard-head,
+  .datatable-section {
+    width: 100%;
+  }
+  .filter-row > div {
+    margin-bottom: 14px;
+  }
+  .alertify-notifier.ajs-bottom {
+    /* bottom: 10px; */
+    top: 10px;
+  }
 }
