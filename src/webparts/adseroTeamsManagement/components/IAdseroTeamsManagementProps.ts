@@ -17,3 +17,13 @@ export interface ICapacityDashBoardProps {
   pageSwitching:String;
  
 }
+
+export interface IClientIntakeDashBoardProps {
+  description: string;
+  spcontext: WebPartContext;
+  siteUrl: string;
+  graphClient: any;
+  allClientData:any; 
+  isClientIntakeAdmin:boolean;
+  RecipentUsersMailDetails:any;
+}

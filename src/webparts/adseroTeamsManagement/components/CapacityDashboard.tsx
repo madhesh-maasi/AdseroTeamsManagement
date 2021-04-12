@@ -21,7 +21,7 @@ import {
   ModalFooter,
   Form,
   FormGroup,
-  Label,
+  Label,  
   Input,
   FormText,
   InputGroup,
@@ -50,65 +50,14 @@ import AdseroTeamsManagement1 from "./AdseroTeamsManagement";
 import DatePicker from "reactstrap-date-picker";
 import * as chartjs from "chart.js";
 import { Pie } from "react-chartjs-2";
+import { AgGridColumn, AgGridReact } from 'ag-grid-react';
 
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 // import "styled-components";
 let data;
-const columns = [
-  {
-    name: "Name",
-    selector: "name",
-    sortable: true,
-    cell: (row) => (
-      <>
-        <img src={row.profileUrl} className="dash-dp" width="30" height="30" />
-        <span>{row.name}</span>
-      </>
-    ),
-  },
-  {
-    name: "Billable",
-    selector: "billable",
-    sortable: true,
-  },
-  {
-    name: "Non - Billable",
-    selector: "nonbillable",
-    sortable: true,
-  },
-  {
-    name: "Capacity Level",
-    selector: "capacitylevel",
-    sortable: true,
-    cell: (row) =>
-      row.capacitylevel == "Full" ? (
-        <span className="table-capacity-full">Full</span>
-      ) : row.capacitylevel == "Medium" ? (
-        <span className="table-capacity-medium">Medium</span>
-      ) : row.capacitylevel == "Low" ? (
-        <span className="table-capacity-low">Low</span>
-      ) : row.capacitylevel == "Low" ? (
-        <span className="table-capacity-off">Off</span>
-      ) : (
-        ""
-      ),
-  },
-];
 
-// let data = {
-//   labels: ["Full", "Medium", "Low", "Off"],
-//   datasets: [
-//     {
-//       data: [
-//         2,
-//         2,
-//         1,
-//         1,
-//       ],
-//       backgroundColor: ["#ff7a7a", "#ffbb54", "#63d86f", "#7a7a7a"],
-//       hoverBackgroundColor: ["#ff7a7a", "#ffbb54", "#63d86f", "#7a7a7a"],
-//     },
-//   ],
-// };
+
 
 export interface ICapacityDashboardState {
   filterText: string;
@@ -131,6 +80,8 @@ export default class AdseroTeamsManagement extends React.Component<
   ICapacityDashBoardProps,
   ICapacityDashboardState
 > {
+  private _CapacityColumns;
+
   constructor(props: ICapacityDashBoardProps) {
     super(props);
     sp.setup({
@@ -155,17 +106,65 @@ export default class AdseroTeamsManagement extends React.Component<
       CapShowChart: false,
     };
 
+    this._CapacityColumns= [
+      {
+        headerName: 'Name',
+        field: 'name',       
+        sortable:true,filter:true,
+        cellRenderer:function(params){
+          var urlLen=params.data.profileUrl
+          if(urlLen)
+          {
+            var resultElement = document.createElement("div"); 
+            var html=`<img src="${urlLen}" class="dash-dp" width="30" height="30" ><span>${params.data.name}</span></img>`
+            resultElement.innerHTML=html
+            return resultElement;
+          }
+        },
+        cellStyle: {height:'40px'}
+      },
+      { headerName: "Billable", field: "billable" ,sortable:true,filter:true}, 
+      { headerName: "Non - Billable", field: "nonbillable",sortable:true,filter:true },   
+      { headerName: "Capacity Level", field: "capacitylevel",sortable:true,filter:true,
+    
+      cellRenderer:function(params){
+        var capacitylev=params.data.capacitylevel
+        capacitylev
+        if(capacitylev=="Full")
+        {
+          var resultElement = document.createElement("span");
+          resultElement.classList.add('table-capacity-full');
+          resultElement.innerText="Full"; 
+          return resultElement;
+        }
+        else if(capacitylev=="Medium")
+        {
+          var resultElement = document.createElement("span");
+          resultElement.classList.add('table-capacity-medium');
+          resultElement.innerText="Medium"; 
+          return resultElement;
+        }
+        else  if(capacitylev=="Low")
+        {
+          var resultElement = document.createElement("span");
+          resultElement.classList.add('table-capacity-low');
+          resultElement.innerText="Low"; 
+          return resultElement;
+        }
+        else  if(capacitylev=="Off")
+        {
+          var resultElement = document.createElement("span");
+          resultElement.classList.add('table-capacity-off');
+          resultElement.innerText="Off"; 
+          return resultElement;
+        }
+      }}
+    ]
+
     this.getTableData();
   }
 
-  public searchData = (e) => {
-    const filteredItems = this.state.CapacityData.filter(
-      (item) =>
-        item.name &&
-        item.name.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-    this.setState({ filterText: e.target.value, TableItems: filteredItems });
-  };
+
 
   public StartDateChange(StartDateValue, StartDateFormatedVal) {
     this.setState({
@@ -298,6 +297,9 @@ export default class AdseroTeamsManagement extends React.Component<
       this.setState({ allpeoplePicker_User: [] });
     }
   };
+  public onFirstDataRendered = (params) => {
+    params.api.sizeColumnsToFit();
+  };
   public render(): React.ReactElement<ICapacityDashBoardProps> {
     return !this.state.MoveToLanding ? (
       <>
@@ -320,18 +322,19 @@ export default class AdseroTeamsManagement extends React.Component<
                     className="search-input"
                     value={this.state.filterText}
                     bsSize={"lg"}
-                    onChange={(e) => this.searchData(e)}
+                    onChange={(e) => this.setState({ filterText: e.target.value })}
                   />
                 </InputGroup>
               </div>
 
               <div className="datatable-section">
-                <DataTable
-                  pagination
-                  paginationServer
-                  columns={columns}
-                  data={this.state.TableItems}
-                />
+              <div className="ag-theme-alpine" style={ {height: 519, width: "100%" } }>
+              <AgGridReact
+                onFirstDataRendered={this.onFirstDataRendered}
+                 columnDefs={this._CapacityColumns}
+                    rowData={this.state.TableItems}  pagination={true}  paginationPageSize={10} quickFilterText={this.state.filterText} >
+                </AgGridReact>
+                </div>
               </div>
             </div>
           </>
@@ -421,7 +424,7 @@ export default class AdseroTeamsManagement extends React.Component<
           ""
         )}
       </>
-    ) : (
+    ) : ( 
       <AdseroTeamsManagement1
         description={this.props.description}
         siteUrl={this.props.siteUrl}
