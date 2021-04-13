@@ -114,6 +114,7 @@
   border: none !important;
   margin-left: auto !important;
 }
+
 @media screen and (max-width: 768px) {
   .left {
     display: none;
@@ -133,6 +134,7 @@
 }
 .tile-section {
   margin-top: 20px;
+  
 }
 
 .tile-section .col-sm-12,
@@ -191,6 +193,10 @@
 }
 .tile-btn-section button {
   margin: 0 5px !important;
+}
+.tile-header {
+  height: 45px;
+  margin-bottom: 14px;
 }
 @media screen and (max-width: 768px) {
 }
@@ -1292,4 +1298,27 @@ div#Client_length {
 }
 div#Client_length select {
   border-radius: 0;
+}
+
+/* nishanth */
+.form-group {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+.modal-dialog {
+  max-width: 900px!important;
+}
+.Adverse.form-control, .nonAdverse.form-control, .SignAdverse.form-control, .SignClient.form-control, .SignParaDiv.form-control {
+  width: calc(100% - 45px)!important;
+  margin: 0;
+}
+.mandatoryInfo {
+  padding-right: 15px;
+  margin-bottom: 5px!important; 
+}
+button#btnClient, #btnAdverse {
+  right: 19px;
+}
+button#btnSignAdverse, #btnnonAdverseDel{
+right:19px;
 }
