@@ -20,15 +20,20 @@
     "@pnp/graph": "^2.3.0",
     "@pnp/sp": "^2.3.0",
     "@pnp/spfx-controls-react": "^3.0.0",
+    "ag-grid-community": "^25.1.0",
+    "ag-grid-react": "^25.1.0",
     "alertifyjs": "^1.13.1",
     "bootstrap": "^4.6.0",
     "chart.js": "^2.9.3",
     "chartjs": "^0.3.24",
+    "moment": "^2.29.1",
     "office-ui-fabric-react": "6.214.0",
     "react": "^16.8.5",
     "react-chartjs-2": "^2.10.0",
     "react-data-table-component": "^6.11.7",
     "react-dom": "^16.8.5",
+    "react-icons": "^4.2.0",
+    "react-multiselect-dropdown-bootstrap": "^1.1.0",
     "reactstrap": "^8.9.0",
     "reactstrap-date-picker": "0.0.11",
     "styled-components": "^5.2.1"
@@ -48,6 +53,7 @@
     "@types/react-dom": "16.8.3",
     "@types/webpack-env": "1.13.1",
     "ajv": "~5.2.2",
-    "gulp": "~3.9.1"
+    "gulp": "~3.9.1",
+    "jquery": "^3.6.0"
   }
 }

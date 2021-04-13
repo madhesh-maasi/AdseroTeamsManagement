@@ -7,6 +7,7 @@ import { escape } from "@microsoft/sp-lodash-subset";
 import "../../../ExternalRef/CSS/style.css";
 import "../../../ExternalRef/CSS/alertify.min.css";
 import * as alertify from "alertifyjs";
+import * as $  from 'jquery';
 import {
   Carousel,
   CarouselItem,
@@ -17,7 +18,7 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
+  ModalFooter, 
   Form,
   FormGroup,
   Label,
@@ -25,7 +26,6 @@ import {
   FormText,
 } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-// import { sp } from "@pnp/sp";
 import { sp, Lists, ILists } from "@pnp/sp/presets/all";
 import "@pnp/sp/fields";
 import "@pnp/sp/items";
@@ -36,8 +36,9 @@ import "@pnp/sp/files";
 import "@pnp/sp/folders";
 import "@pnp/sp/site-users/web";
 import CapacityDashboard from "./CapacityDashboard";
+import ClientIntakeDashboard from "./ClientIntakeDashBoard";
 var profileListUrl = "/sites/adsero/ProfilePictures/";
-
+import { BsPlus } from "react-icons/bs";
 export interface IcarosuelState {
   pageSwitch:string;
   landingActive: boolean;
@@ -55,9 +56,45 @@ export interface IcarosuelState {
   nonbillable: string;
   capacityEditFlag: Boolean;
   CapacityEditId: number;
+  showIntakeModal:boolean;
+  showIntakeDashboard:boolean;
+  allClientIntakeData:any;
+  ClientIntakeAdmin:boolean;
+
 }
 var slides = [];
 var tilesArray = [];
+var CrntUserEmail;
+
+var Adminuser=false;
+var ReadUser=false;
+var RecipientUser=false;
+
+var RecipentUsersMail=[];
+
+var arrClientName = [];
+var arrIndivuals = [];
+var arrAdverseName = [];
+var arrAdversindicual = [];
+var arrNonAdversName = [];
+var Allvalues = [];
+var AllItems=[];
+var GroupUsers=[];
+var SignClientRender = "";
+var AdverseNameRender = "";
+var SignAdverseRender = "";
+var NonAdverseRender = "";
+var editData=[];
+var checkconflicts1;
+var checkconflicts2 = [];
+var checkconflicts3 = [];
+var checkconflicts4 = [];
+var checkconflicts5 = [];
+
+var clientvalue=[];
+var adversvalue=[];
+var potentialadversarievalue=[];
+var otherindivualvalue=[];
 export default class AdseroTeamsManagement1 extends React.Component<
   IAdseroTeamsManagementProps,
   IcarosuelState
@@ -87,11 +124,493 @@ export default class AdseroTeamsManagement1 extends React.Component<
       nonbillable: "",
       capacityEditFlag: false,
       CapacityEditId: 0,
+      showIntakeModal:false,
+      showIntakeDashboard:false,
+      allClientIntakeData:[],
+      ClientIntakeAdmin:false
     };
+    
     this.loadProfilepics();
     this.loadUsersBirthday();
     this.getCurrentUserDetails();
+    $(document).on("click", "#btnClient", function (e) {
+      e.stopImmediatePropagation();
+      var clientAdd = `<div class="row">
+      <div class="col-common col-sm-12">
+      <div class="form-group">
+        <input type="text" class="SignClient form-control">
+        <button class="btn btn-secodary remove-icon">
+        <i class="glyphicon glyphicon-trash">-</i>
+        </button>
+      </div>
+      </div>
+      </div>`;
+      $(".SignParaDiv").append(clientAdd);
+    });
+
+    $(document).on("click", "#btnAdverse", function (e) {
+      e.stopImmediatePropagation();
+      var clientAdd = `<div class="row">
+      <div class="col-common col-sm-12">
+      <div class="form-group">
+        <input type="text" class="Adverse form-control">
+    <button class="btn btn-secodary remove-icon">
+        <i class="glyphicon glyphicon-trash">-</i>
+        </button>
+      </div>
+      </div>
+      </div>`;
+      $(".ParAdverseName").append(clientAdd);
+    });
+    $(document).on("click", "#btnSignAdverse", function (e) {
+      e.stopImmediatePropagation();
+      //$('#btnSignAdverse').click((e)=>{
+      var clientAdd = `<div class="row ">
+      <div class="col-common col-sm-12">
+      <div class="form-group">
+        <input type="text" class="SignAdverse form-control">
+    <button class="btn btn-secodary remove-icon">
+        <i class="glyphicon glyphicon-trash">-</i>
+        </button>
+
+      </div>
+      </div>
+      </div>`;
+      $(".InAdverse").append(clientAdd);
+    });
+    $(document).on("click", "#btnnonAdverseDel", function (e) {
+      e.stopImmediatePropagation();
+      //$('#btnnonAdverse').click((e)=>{
+      var clientAdd = `<div class="row ">
+      <div class="col-common col-sm-12">
+      <div class="form-group">
+        <input type="text" class="nonAdverse form-control">
+    <button class="btn btn-secodary remove-icon">
+        <i class="glyphicon glyphicon-trash">-</i>
+        </button>
+      </div>
+      </div>
+      </div>`;
+      $(".nonParAdverse").append(clientAdd);
+    });
+
+    $(document).on("click", ".remove-icon", function (e) {
+      e.stopImmediatePropagation();
+      $(this).parent().remove();
+    });
+
+    // $(document).on("click", "#btnSave",  (e) =>
+    // {
+    //   e.stopImmediatePropagation();
+    //   clientvalue=[];
+    //   adversvalue=[];
+    //   potentialadversarievalue=[];
+    //   otherindivualvalue=[];
+
+    //   $("#btnSave").attr("disabled", true);
+    //   SignClientRender = "";
+    //   AdverseNameRender = "";
+    //   SignAdverseRender = "";
+    //   NonAdverseRender = "";
+    //   //$('#btnSave').click((e)=>{
+    //   var SignClient = document.getElementsByClassName("SignClient");
+    //   for (let i = 0; i < SignClient.length; i++) {
+    //     if (SignClient[i])
+    //       SignClientRender =
+    //         SignClientRender + (SignClient[i])["value"] + ";";
+    //   }
+
+    //   var AdverseName = document.getElementsByClassName("Adverse");
+    //   for (let i = 0; i < AdverseName.length; i++) {
+    //     if (AdverseName[i])
+    //       AdverseNameRender =
+    //         AdverseNameRender + (AdverseName[i])["value"] + ";";
+    //   }
+    //   var SignAdverse = document.getElementsByClassName("SignAdverse");
+    //   for (let i = 0; i < SignAdverse.length; i++) {
+    //     if (SignAdverse[i])
+    //       SignAdverseRender =
+    //         SignAdverseRender + (SignAdverse[i])["value"] + ";";
+    //   }
+    //   var NonAdverse = document.getElementsByClassName("nonAdverse");
+    //   for (let i = 0; i < NonAdverse.length; i++) {
+    //     if (NonAdverse[i])
+    //       NonAdverseRender =
+    //         NonAdverseRender + (NonAdverse[i])["value"] + ";";
+    //   }
+
+    //   this.mandatoryvalidation();
+    // });
+
+    $(document).on('keypress','.SignClient,.SignAdverse,.Adverse,.nonAdverse',function(e)
+    {
+      e.stopImmediatePropagation();
+      $("#btnSave").text("Client Conflict");
+    });
+       
+    $(document).on('paste','.SignClient,.SignAdverse,.Adverse,.nonAdverse',function(e)
+    {
+      e.stopImmediatePropagation();
+      $("#btnSave").text("Client Conflict");
+    });
+
+    $(document).on("click", ".sign-check", function (e) {
+      e.stopImmediatePropagation();
+
+      if (
+        $(".sign-check." + e.target.id + " span").hasClass("glyphicon-remove")
+      ) {
+        $(".sign-check." + e.target.id + "").css("text-decoration", "none");
+        $(".sign-check." + e.target.id + " span").removeClass(
+          "glyphicon-remove"
+        );
+        $(".sign-check." + e.target.id + " span").addClass("glyphicon-ok");
+      } else if (
+        $(".sign-check." + e.target.id + " span").hasClass("glyphicon-ok")
+      ) {
+        $(".sign-check." + e.target.id + "").css(
+          "text-decoration",
+          "line-through"
+        );
+        $(".sign-check." + e.target.id + " span").removeClass("glyphicon-ok");
+        $(".sign-check." + e.target.id + " span").addClass("glyphicon-remove");
+      }
+      if ($(".glyphicon-ok").length == 0) 
+      {
+        $("#btnSave").attr("disabled", false);
+        checkconflictsonchange();
+        
+      }else
+      {
+        $("#btnSave").attr("disabled", true);
+      }
+    });
+    $(document).on("click", ".sign-ctrlcheck", function (e) {
+      console.log(e);
+      e.stopImmediatePropagation();
+      if (
+        $(".sign-ctrlcheck." + e.target.id + " span").hasClass(
+          "glyphicon-remove"
+        )
+      ) {
+        $(".sign-ctrlcheck." + e.target.id + "").css("text-decoration", "none");
+        $(".sign-ctrlcheck." + e.target.id + " span").removeClass(
+          "glyphicon-remove"
+        );
+        $(".sign-ctrlcheck." + e.target.id + " span").addClass("glyphicon-ok");
+      } else if (
+        $(".sign-ctrlcheck." + e.target.id + " span").hasClass("glyphicon-ok")
+      ) {
+        $(".sign-ctrlcheck." + e.target.id + "").css(
+          "text-decoration",
+          "line-through"
+        );
+        $(".sign-ctrlcheck." + e.target.id + " span").removeClass(
+          "glyphicon-ok"
+        );
+        $(".sign-ctrlcheck." + e.target.id + " span").addClass(
+          "glyphicon-remove"
+        );
+      }
+      if ($(".glyphicon-ok").length == 0) {
+        $("#btnSave").attr("disabled", false);
+        checkconflictsonchange();
+      }else
+      {
+        $("#btnSave").attr("disabled", true);
+
+      }
+    });
+    $(document).on("click", ".sign-adcheck", function (e) {
+      console.log(e);
+      e.stopImmediatePropagation();
+      if (
+        $(".sign-adcheck." + e.target.id + " span").hasClass("glyphicon-remove")
+      ) {
+        $(".sign-adcheck." + e.target.id + "").css("text-decoration", "none");
+        $(".sign-adcheck." + e.target.id + " span").removeClass(
+          "glyphicon-remove"
+        );
+        $(".sign-adcheck." + e.target.id + " span").addClass("glyphicon-ok");
+      } else if (
+        $(".sign-adcheck." + e.target.id + " span").hasClass("glyphicon-ok")
+      ) {
+        $(".sign-adcheck." + e.target.id + "").css(
+          "text-decoration",
+          "line-through"
+        );
+        $(".sign-adcheck." + e.target.id + " span").removeClass("glyphicon-ok");
+        $(".sign-adcheck." + e.target.id + " span").addClass(
+          "glyphicon-remove"
+        );
+      }
+      if ($(".glyphicon-ok").length == 0) 
+      {
+        $("#btnSave").attr("disabled", false);
+        checkconflictsonchange();
+        
+      }else
+      {
+        $("#btnSave").attr("disabled", true);
+
+      }
+    });
+    $(document).on("click", ".sign-noncheck", function (e) {
+      console.log(e);
+      e.stopImmediatePropagation();
+      if (
+        $(".sign-noncheck." + e.target.id + " span").hasClass(
+          "glyphicon-remove"
+        )
+      ) {
+        $(".sign-noncheck." + e.target.id + "").css("text-decoration", "none");
+        $(".sign-noncheck." + e.target.id + " span").removeClass(
+          "glyphicon-remove"
+        );
+        $(".sign-noncheck." + e.target.id + " span").addClass("glyphicon-ok");
+      } else if (
+        $(".sign-noncheck." + e.target.id + " span").hasClass("glyphicon-ok")
+      ) {
+        $(".sign-noncheck." + e.target.id + "").css(
+          "text-decoration",
+          "line-through"
+        );
+        $(".sign-noncheck." + e.target.id + " span").removeClass(
+          "glyphicon-ok"
+        );
+        $(".sign-noncheck." + e.target.id + " span").addClass(
+          "glyphicon-remove"
+        );
+      }
+      if ($(".glyphicon-ok").length == 0) {
+        $("#btnSave").attr("disabled", false);
+        checkconflictsonchange();
+      }else
+      {
+        $("#btnSave").attr("disabled", true);
+
+      }
+    });
   }
+
+   mandatoryvalidation =async() => {
+    var isAllValueFilled = true;
+  
+    var arrNewClient = [];
+    var arrNewClientSign = [];
+    var arrNewAdverse = [];
+    var arrNewAdverseSign = []; 
+    var arrNewNonAdverse = [];
+  
+    var checkconflicts2 = [];
+    var checkconflicts3 = [];
+    var checkconflicts4 = [];
+    var checkconflicts5 = [];
+  
+    if(!$('#clientName').val())
+    {
+      alertify.set('notifier','position', 'top-right');
+      alertify.error('Please Enter Client Name');
+      $("#btnSave").attr("disabled", false);
+      return false;
+    }
+  
+    await arrNewClient.push($("#clientName").val().toLowerCase());
+  
+    await $(".SignClient").each(async function (key, val) 
+    {
+      
+      await arrNewClientSign.push(val.value.toLowerCase());
+    });
+  
+    await $(".Adverse").each(async function (key, val) {
+      await arrNewAdverse.push(val.value.toLowerCase());
+    });
+  
+    await $(".SignAdverse").each(async function (key, val) {
+      await arrNewAdverseSign.push(val.value.toLowerCase());
+    });
+  
+    await $(".nonAdverse").each(async function (key, val) {
+      await arrNewNonAdverse.push(val.value.toLowerCase());
+    });
+  
+  
+
+  
+    await $(".SignClient").each(async function (key, val) 
+    {
+      if(val.value)
+      clientvalue.push(val.value.toLowerCase());
+    });
+  
+    await $(".Adverse").each(async function (key, val) 
+    {
+      if(val.value) 
+      adversvalue.push(val.value.toLowerCase());
+    });
+  
+    await $(".SignAdverse").each(async function (key, val) 
+    {
+      if(val.value) 
+      potentialadversarievalue.push(val.value.toLowerCase());
+    });
+  
+    await $(".nonAdverse").each(async function (key, val) 
+    {
+      if(val.value) 
+      otherindivualvalue.push(val.value.toLowerCase());
+    });
+  
+  
+    checkconflicts1 = Allvalues.filter(async (element) => {
+      return await arrNewClient.indexOf(element.value) != -1;
+    });
+    Allvalues.filter(async (element) => {
+      if (arrNewClientSign.indexOf(element.value) != -1) {
+        await checkconflicts2.push(element);
+      }
+    });
+    Allvalues.filter(async (element) => {
+      if (arrNewAdverseSign.indexOf(element.value) != -1) {
+        await checkconflicts3.push(element);
+      }
+    });
+    Allvalues.filter(async (element) => {
+      if (arrNewAdverse.indexOf(element.value) != -1) {
+        await checkconflicts4.push(element);
+      }
+    });
+    Allvalues.filter(async (element) => {
+      if (arrNewNonAdverse.indexOf(element.value) != -1) {
+        await checkconflicts5.push(element);
+      }
+  
+      // return arrNewNonAdverse.indexOf(element) !== -1
+    });
+
+    if ($("#btnSave").text() != "Submit") {
+      if (checkconflicts2.length > 0) {
+        var renderConflict1 = "";
+        checkconflicts2.map(async (item, idx) => {
+          renderConflict1 +=
+            '<li class="list-group-item sign-check ' +
+            idx +
+            '" id=' +
+            idx +
+            '><span class="glyphicon glyphicon-ok"></span>' +
+            item.value +
+            "-" +
+            item.column +
+            "-" +
+            item.Client +
+            "</li>";
+        });
+        $(".Sign-Conflict").empty();
+        $(".Sign-Conflict").append(renderConflict1);
+        await $(".conflictone").show();
+      } else {
+        $(".Sign-Conflict").empty();
+        $(".conflictone").hide();
+      }
+      if (checkconflicts3.length > 0) {
+        var renderConflict3 = "";
+        checkconflicts3.map(async (item, idx) => {
+           renderConflict3 +=
+            '<li class="list-group-item sign-ctrlcheck ' +
+            idx +
+            '" id=' +
+            idx +
+            '><span class="glyphicon glyphicon-ok"></span>' +
+            item.value +
+            "-" +
+            item.column +
+            "-" +
+            item.Client +
+            "</li>";
+        });
+        $(".Sign-CtrlAdverse").empty();
+        $(".Sign-CtrlAdverse").append(renderConflict3);
+        await $(".conflicttwo").show();
+      } else {
+        $(".Sign-CtrlAdverse").empty();
+        $(".conflicttwo").hide();
+      }
+      if (checkconflicts4.length > 0) {
+        var renderConflict4 = "";
+        checkconflicts4.map(async (item, idx) => {
+           renderConflict4 +=
+            '<li class="list-group-item sign-adcheck ' +
+            idx +
+            '" id=' +
+            idx +
+            '><span class="glyphicon glyphicon-ok"></span>' +
+            item.value +
+            "-" +
+            item.column +
+            "-" +
+            item.Client +
+            "</li>";
+        });
+        $(".Sign-Adverse").empty();
+        $(".Sign-Adverse").append(renderConflict4);
+        await $(".conflictthree").show();
+      } else {
+        $(".Sign-Adverse").empty();
+        $(".conflictthree").hide();
+      }
+      if (checkconflicts5.length > 0) {
+        var renderConflict5 = "";
+        checkconflicts5.map(async (item, idx) => {
+           renderConflict5 +=
+            '<li class="list-group-item sign-noncheck ' +
+            idx +
+            '" id=' +
+            idx +
+            '><span class="glyphicon glyphicon-ok"></span>' +
+            item.value +
+            "-" +
+            item.column +
+            "-" +
+            item.Client +
+            "</li>";
+        });
+        $(".Sign-NonAdverse").empty();
+        $(".Sign-NonAdverse").append(renderConflict5);
+        await $(".conflictfour").show();
+      } else {
+        $(".Sign-NonAdverse").empty();
+        $(".conflictfour").hide();
+      }
+    }
+
+  
+    if ($(".glyphicon-ok").length == 0) 
+    {
+        const iar = await sp.web.lists
+        .getByTitle("ClientIntake")
+        .items.add({
+          Title: "Client InTake",
+          PotentialClientName: $("#clientName").val(),
+          IndividualsClient: SignClientRender,
+          IndividualsAdversary: SignAdverseRender,
+          OtherIndividuals: NonAdverseRender,
+          PotentialAdversaries: AdverseNameRender
+        })
+        .then( () => {
+          alertify.message("Record Created Successfully");
+          this.setState({showIntakeModal:false})
+        }).catch( (e)=>{
+           alertify.message("something went wrong.please contact system admin");
+          this.setState({showIntakeModal:false})
+        });
+    }
+  
+    return isAllValueFilled;
+  }
+
+  
+
 
   //!Check User Today
 
@@ -132,6 +651,8 @@ export default class AdseroTeamsManagement1 extends React.Component<
       .select("mail,displayName,Id")
       .get(async (error, response) => {
         this.setState({ currentUserDetails: response });
+        CrntUserEmail=response.mail;
+        this.getAdminGroupUsers();
         this.getCurrentUsergroups();
         this.getUserToday();
       });
@@ -287,7 +808,7 @@ export default class AdseroTeamsManagement1 extends React.Component<
         });
         this.setState({
           currentUserProfileUrl: profileUrl[0].ServerRelativeUrl,
-          showCapacityModal: !this.state.showCapacityModal,
+          showCapacityModal: !this.state.showCapacityModal
         });
       });
   };
@@ -353,6 +874,231 @@ export default class AdseroTeamsManagement1 extends React.Component<
     }
   };
 
+  public  getAdminGroupUsers=async()=>
+{
+  await sp.web.siteGroups.getByName("Client Conflict Admins").users().then(async (items)=>
+  {
+      Adminuser=false;
+      for(var i=0;i<items.length;i++)
+      {
+          if(CrntUserEmail==items[i].Email)
+          {
+              Adminuser=true;
+              this.setState({ClientIntakeAdmin:true});
+          }
+      }
+      await this.getReadGroupUsers();
+  }).catch(function (error) 
+  {
+    ErrorCallBack(error, "getAdminGroupUsers");
+  });
+}
+public getReadGroupUsers=async()=>
+{
+  await sp.web.siteGroups.getByName("Client Conflict Read only").users().then(async (items)=>
+  {
+    ReadUser=false;
+    for(var i=0;i<items.length;i++)
+    {
+        if(CrntUserEmail==items[i].Email)
+        {
+          ReadUser=true;
+        }
+    }
+    await this.getRecipientUserGroupUsers()
+  }).catch(function (error) 
+  {
+    ErrorCallBack(error, "getReadGroupUsers");
+  });
+}
+public getRecipientUserGroupUsers=async()=>
+{
+  await sp.web.siteGroups.getByName("Client Conflict Recipient").users().then(async(items)=>
+  {
+    RecipientUser=false;
+    for(var i=0;i<items.length;i++)
+    {
+        RecipentUsersMail.push(items[i].Email);
+        if(CrntUserEmail==items[i].Email)
+        {
+          RecipientUser=true;
+          
+
+        }
+    }
+    
+    if(!Adminuser)
+    $("#btnNewRecord").hide();
+    else
+    $("#btnNewRecord").show();
+
+    if(RecipientUser||Adminuser||ReadUser)
+    await this.fetchclientdetails();
+    else
+    alertify.message("You Don't have Permission to access this page");
+
+  }).catch(function (error) 
+  {
+    ErrorCallBack(error, "getRecipientUserGroupUsers");
+  });
+}
+
+ fetchclientdetails=async()=> {
+  await sp.web.lists
+    .getByTitle("ClientIntake")
+    .items.top(5000).orderBy("Modified",false)
+    .get()
+    .then(async (items: any) => {
+      AllItems=items;
+      var html = "";
+      for (var i = 0; i < items.length; i++) {
+        var formattedAdverse = "";
+        var formattedClient = "";
+        var formattedNonAdverse = "";
+        var formattedAdverseNames = "";
+        if (items[i].IndividualsAdversary) {
+
+          var splitValueAdverse = items[i].IndividualsAdversary.replace(
+            /;/g,
+            "</br>"
+          );
+          formattedAdverse = "<div>" + splitValueAdverse + "</div>";
+        }
+
+        if (items[i].IndividualsClient) {
+
+          var splitValueClient = items[i].IndividualsClient.replace(
+            /;/g,
+            "</br>"
+          );
+          formattedClient = "<div>" + splitValueClient + "</div>";
+        }
+        if (items[i].OtherIndividuals) {
+
+          var splitValueNonAdverse = items[i].OtherIndividuals.replace(
+            /;/g,
+            "</br>"
+          );
+          formattedNonAdverse = "<div>" + splitValueNonAdverse + "</div>";
+        }
+        if (items[i].PotentialAdversaries) {
+
+          var splitValueAdverseNames = items[i].PotentialAdversaries.replace(
+            /;/g,
+            "</br>"
+          );
+          formattedAdverseNames = "<div>" + splitValueAdverseNames + "</div>";
+        }
+
+       
+
+        if (items[i].PotentialClientName) {
+          arrClientName.push(items[i].PotentialClientName.toLowerCase());
+        }
+
+        if (items[i].IndividualsClient) {
+          items[i].IndividualsClient.split(";").map(async (item) => {
+            if (item != "")
+              await arrIndivuals.push({
+                value: item.toLowerCase(),
+                column: "Individuals with Significant (Client)",
+                Client: items[i].PotentialClientName.toLowerCase(),
+              });
+          });
+        }
+
+        if (items[i].PotentialAdversaries) {
+
+          items[i].PotentialAdversaries.split(";").map(async (item) => {
+            if (item != "")
+              await arrAdverseName.push({
+                value: item.toLowerCase(),
+                column: "Potential Adversaries",
+                Client: items[i].PotentialClientName.toLowerCase(),
+              });
+          });
+        }
+
+        if (items[i].IndividualsAdversary) {
+          items[i].IndividualsAdversary.split(";").map(async (item) => {
+            if (item != "")
+              await arrAdversindicual.push({
+                value: item.toLowerCase(),
+                column: "Individuals with Significant (Adversary)",
+                Client: items[i].PotentialClientName.toLowerCase(),
+              });
+          });
+        }
+
+        if (items[i].OtherIndividuals) {
+
+          items[i].OtherIndividuals.split(";").map(async(item) => {
+            if (item != "")
+              await arrNonAdversName.push({
+                value: item.toLowerCase(),
+                column: "Other Individuals",
+                Client: items[i].PotentialClientName.toLowerCase(),
+              });
+          });
+        }
+      }
+      Allvalues = arrNonAdversName
+        .concat(arrIndivuals)
+        .concat(arrAdverseName)
+        .concat(arrAdversindicual);
+      // .concat(arrNonAdversName);
+      this.setState({allClientIntakeData:AllItems})
+
+    })
+    .catch(async function (error) {
+      await alertify.message(error.message);
+    });
+
+
+  setTimeout(function () {}, 3000);
+}
+
+public clientSave = async () => {
+  clientvalue=[];
+  adversvalue=[];
+  potentialadversarievalue=[];
+  otherindivualvalue=[];
+
+  $("#btnSave").attr("disabled", true);
+  SignClientRender = "";
+  AdverseNameRender = "";
+  SignAdverseRender = "";
+  NonAdverseRender = "";
+  //$('#btnSave').click((e)=>{
+  var SignClient = document.getElementsByClassName("SignClient");
+  for (let i = 0; i < SignClient.length; i++) {
+    if (SignClient[i]["value"])
+      SignClientRender =
+        SignClientRender + (SignClient[i])["value"] + ";";
+  }
+
+  var AdverseName = document.getElementsByClassName("Adverse");
+  for (let i = 0; i < AdverseName.length; i++) {
+    if (AdverseName[i]["value"])
+      AdverseNameRender =
+        AdverseNameRender + (AdverseName[i])["value"] + ";";
+  }
+  var SignAdverse = document.getElementsByClassName("SignAdverse");
+  for (let i = 0; i < SignAdverse.length; i++) {
+    if (SignAdverse[i]["value"])
+      SignAdverseRender =
+        SignAdverseRender + (SignAdverse[i])["value"] + ";";
+  }
+  var NonAdverse = document.getElementsByClassName("nonAdverse");
+  for (let i = 0; i < NonAdverse.length; i++) {
+    if (NonAdverse[i]["value"])
+      NonAdverseRender =
+        NonAdverseRender + (NonAdverse[i])["value"] + ";";
+  }
+
+  this.mandatoryvalidation();
+
+}
 
   // TODO Rendering
   public render(): React.ReactElement<IAdseroTeamsManagementProps> {
@@ -362,6 +1108,7 @@ export default class AdseroTeamsManagement1 extends React.Component<
           <Col md={{ size: 6 }} lg={{ size: 8 }} className="left">
             <h2 className="banner-caps">Integrity. Respect. Trust</h2>
           </Col>
+          {this.state.CarouselItems.length>0?
           <Col
             xs={{ size: 12 }}
             sm={{ size: 12 }}
@@ -417,13 +1164,15 @@ export default class AdseroTeamsManagement1 extends React.Component<
                 onClickHandler={() => this.next.call(this)}
               />
             </Carousel>
-          </Col>
+          </Col>:""}
         </Row>
         <div className="tile-section">
           <div className="row">
             {this.state.tilesItems.length > 0
-              ? this.state.tilesItems.map((tItems) => {
-                  return (
+              ? this.state.tilesItems.map((tItems) => { 
+                return (
+                tItems.title=="Capacity Management System"?
+                 
                     <div className="col-sm-12 col-md-6 col-lg-4 col-xl-3">
                       <div className="tile">
                         <div className="tile-title-section">
@@ -460,10 +1209,39 @@ export default class AdseroTeamsManagement1 extends React.Component<
                           </button>
                         </div>
                       </div>
-                    </div>
+                    </div>:tItems.title=="Client Intake Management"?
+                     <div className="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                     <div className="tile">
+                       <div className="tile-title-section">
+                         <div className="tile-logo"></div>
+                         <div className="tile-header">
+                           <h2>{tItems.title}</h2>
+                           <p></p>
+                         </div>
+                       </div>
+                       <div className="tile-btn-section text-right">
+                         <button
+                           className="btn btn-sm btn-primary"
+                           onClick={()=>this.setState({showIntakeModal:true})}
+                         >
+                           Add
+                         </button>
+                         <button
+                           className="btn btn-sm btn-primary"
+                           onClick={(e) =>{
+                             this.setState({ landingActive: false,showIntakeDashboard:true });
+                             console.log(this.state.pageSwitch)}
+                             
+                           }
+                         >
+                           Dashboard
+                         </button>
+                       </div>
+                     </div>
+                   </div>:""
                   );
                 })
-              : ""}
+              : <h4>No Tabs to Display</h4>}
           </div>
         </div>
         <Modal
@@ -566,8 +1344,177 @@ export default class AdseroTeamsManagement1 extends React.Component<
             </Button>{" "}
           </ModalFooter>
         </Modal>
+
+        <Modal
+          isOpen={this.state.showIntakeModal}
+          toggle={()=>this.setState({showIntakeModal:false})}
+          className="capacity-modal"
+        >
+          <ModalHeader  className="text-center">
+            Add Client Intake
+          </ModalHeader>
+          <ModalBody>
+    <div className="form-container-fluid">
+    <div className="row">
+    <div className="col-sm-12">
+    <div className="row">
+    <div className="mandatoryInfo text-right pr-1"><span className="MStar">*</span><label>Mandatory Field</label></div>
+    
+    <div className="form-group">
+
+     
+      <div className="col-common col-sm-12 form-group mand">
+      
+      <input type="text" className="form-control" id="clientName" placeholder="Potential Client Name" />
       </div>
-    ) : (
+      </div>
+    </div>
+    </div>
+    </div>
+
+    <div className="row" style={{display:"none"}}>
+    <div className="col-sm-6 main-left-column">
+    <div className="row">
+    <div className="form-group">
+
+      <div className="col-common col-sm-12 form-group">
+      <input type="text" className="form-control" id="MName" placeholder="Matter Name" />
+      </div>
+      </div>
+    </div>
+    </div>
+
+        <div className="col-sm-6 main-right-column" style={{display:"none"}}>
+    <div className="row">
+    <div className="form-group">
+   
+      <div className="col-common col-sm-12 form-group">
+      <input type="text" className="form-control" id="MNumber" placeholder="Matter Number" />
+      </div>
+      </div>
+    </div>
+    </div>
+    </div>
+    
+
+    <div className="row ">
+    <div className="col-sm-6 main-left-column">
+    <div className="row ParSignClient">
+    <div className="col-common col-sm-12">  
+    <div className="form-group">
+
+    <input type="text" className="SignClient form-control" placeholder="Individuals with Significant (Client):" />
+    <button className="btn btn-primary add-icon" id="btnClient">
+    <i className="glyphicon glyphicon-plus">+</i>
+    </button>
+
+  </div>
+  
+
+  <div className="SignParaDiv"></div>
+
+  <div className="alert alert-warning custom-alert conflictone" style={{display:"none"}}>
+<ul className="list-group custom-list-group Sign-Conflict">
+  
+</ul>
+</div>
+    </div>
+    </div>
+    
+
+    <div className="">
+    <div className="row ">
+    <div className="col-common col-sm-12 ">
+    <div className="form-group">
+    
+      <input type="text" className="Adverse form-control" placeholder="Potential Adversaries" />
+      <button className="btn btn-primary add-icon"  id="btnAdverse">
+        <i className="glyphicon glyphicon-plus">+</i>
+      </button>
+
+    </div>
+    </div>
+    
+    
+    </div>
+    <div className="ParAdverseName"></div>
+
+    <div className="alert alert-warning custom-alert conflictthree" style={{display:"none"}}>
+
+<ul className="list-group custom-list-group Sign-Adverse">
+  
+</ul>
+</div>
+    </div>
+
+
+    
+    </div>
+    <div className="col-sm-6 main-right-column">    
+
+<div className="row ">
+<div className="col-common col-sm-12">
+<div className="form-group">
+
+  <input type="text" className="SignAdverse form-control" placeholder="Individuals with Significant (Adversary)" />
+          <button className="btn btn-primary add-icon" id="btnSignAdverse">
+        <i className="glyphicon glyphicon-plus">+</i>
+      </button>
+
+</div>
+</div>
+</div>
+
+<div className="InAdverse"></div>
+<div className="alert alert-warning custom-alert conflicttwo" style={{display:"none"}}>
+
+<ul className="list-group custom-list-group Sign-CtrlAdverse">
+  
+</ul>
+</div>
+
+    
+    <div className="row ">
+    <div className="col-common col-sm-12">
+    <div className="form-group">
+   
+      <input type="text" className="nonAdverse form-control" placeholder="Other Individuals" id="btnnonAdverse" />
+      <button className="btn btn-primary add-icon" id="btnnonAdverseDel">
+      <i className="glyphicon glyphicon-plus">+</i>
+      </button>
+ 
+    </div>
+    </div>
+    </div>
+
+    <div className="nonParAdverse"> </div>
+    <div className="alert alert-warning custom-alert conflictfour" style={{display:"none"}}>
+
+<ul className="list-group custom-list-group Sign-NonAdverse">
+  
+</ul>
+</div>
+</div>
+</div></div>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="secondary" onClick={()=>this.setState({showIntakeModal:false})}>
+              Cancel
+            </Button>
+        
+
+            <Button
+              color="primary"
+              className="mr-0" id="btnSave" onClick={this.clientSave}
+            >
+               <span className="button-text">Conflict Check</span>
+            </Button>{" "}
+          </ModalFooter>
+        </Modal>
+      </div>
+    ):this.state.showIntakeDashboard?(<ClientIntakeDashboard  RecipentUsersMailDetails={RecipentUsersMail}  description={this.props.description} siteUrl={this.props.siteUrl}
+    spcontext={this.props.context}
+    graphClient={this.props.graphClient} allClientData={this.state.allClientIntakeData} isClientIntakeAdmin={this.state.ClientIntakeAdmin}/> ): (
       <CapacityDashboard
         ProfileData={this.state.allProfilePics}
         description={this.props.description}
@@ -577,6 +1524,69 @@ export default class AdseroTeamsManagement1 extends React.Component<
         landingSwitch={this.state.landingActive}
         pageSwitching={this.state.pageSwitch}
       />
-    );
+    )
   }
+}
+
+
+
+async function ErrorCallBack(error,methodname)
+{
+  console.log(error);
+}
+
+
+
+
+
+async function checkconflictsonchange()
+{
+
+  var arrNewClientSigntemp  = [];
+  var arrNewAdversetemp  = [];
+  var arrNewAdverseSigntemp  = []; 
+  var arrNewNonAdversetemp  = [];
+
+  var isNoNewValue=false;
+
+
+  await $(".SignClient").each(async function (key, val) 
+  {
+    if(val.value)
+    await arrNewClientSigntemp.push(val.value.toLowerCase());
+  });
+
+  await $(".Adverse").each(async function (key, val)
+  {
+    if(val.value)
+    await arrNewAdversetemp.push(val.value.toLowerCase());
+  });
+
+  await $(".SignAdverse").each(async function (key, val) {
+    if(val.value)
+    await arrNewAdverseSigntemp.push(val.value.toLowerCase());
+  });
+
+  await $(".nonAdverse").each(async function (key, val) {
+    if(val.value)
+    await arrNewNonAdversetemp.push(val.value.toLowerCase());
+  });
+
+  if(arrNewClientSigntemp.length!=clientvalue.length)
+  isNoNewValue=true;
+  else if(arrNewAdversetemp.length!=adversvalue.length)
+  isNoNewValue=true;
+  else if(arrNewAdverseSigntemp.length!=potentialadversarievalue.length)
+  isNoNewValue=true;
+  else if(arrNewNonAdversetemp.length!=otherindivualvalue.length)
+  isNoNewValue=true;
+
+        if(isNoNewValue)
+        {
+          $("#btnSave").text("Client Conflict");
+        }
+        else
+        {
+          $("#btnSave").text("Submit");
+        }
 }
