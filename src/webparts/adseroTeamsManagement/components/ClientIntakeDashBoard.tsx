@@ -86,9 +86,8 @@ var NonAdverseRender = "";
       sp: {
         baseUrl: this.props.siteUrl,
       },
-    });
-
-    this.state = {
+    });    
+    this.state = { 
         ClientToLanding:false,
         ClientIntakeDashboardData:[],
         IntakeTableItems:[],
@@ -101,7 +100,7 @@ var NonAdverseRender = "";
         viewMultiData:"",
         filterText:"",
         perpageCount:10,
-        IntakeCopyTableItems:[]
+        IntakeCopyTableItems:[] 
     };
 
      this.tblcolumns = [
@@ -262,9 +261,7 @@ var NonAdverseRender = "";
         color: 'black'
       },
     },
-  ];
-
-
+  ]; 
     this.getTableItems();
 
     $(document).on("click", "#btneditClient", function (e) {
@@ -274,7 +271,7 @@ var NonAdverseRender = "";
       <div class="form-group">
         <input type="text" class="SignClient form-control">
         <button class="btn btn-secodary remove-icon">
-        <i class="glyphicon glyphicon-trash">-</i>
+        <span class ="removeicon"></span>
         </button>
       </div>
       </div>
@@ -289,8 +286,8 @@ var NonAdverseRender = "";
       <div class="form-group">
         <input type="text" class="Adverse form-control">
     <button class="btn btn-secodary remove-icon">
-        <i class="glyphicon glyphicon-trash">-</i>
-        </button>
+    <span class ="removeicon"></span>
+    </button>
       </div>
       </div>
       </div>`;
@@ -304,8 +301,8 @@ var NonAdverseRender = "";
       <div class="form-group">
         <input type="text" class="SignAdverse form-control">
     <button class="btn btn-secodary remove-icon">
-        <i class="glyphicon glyphicon-trash">-</i>
-        </button>
+    <span class ="removeicon"></span>
+    </button>
 
       </div>
       </div>
@@ -320,8 +317,9 @@ var NonAdverseRender = "";
       <div class="form-group">
         <input type="text" class="nonAdverse form-control">
     <button class="btn btn-secodary remove-icon">
-        <i class="glyphicon glyphicon-trash">-</i>
-        </button>
+    <span class ="removeicon"></span>
+
+    </button>
       </div>
       </div>
       </div>`;
@@ -472,7 +470,7 @@ var NonAdverseRender = "";
       "</br>"
     );
     formattedAdverseNames = "<div>" + splitValueAdverseNames + "</div>";
-  }
+  } 
   if(viewData[i].Response)
   {
      var responselength=viewData[i].Response.length;
@@ -593,25 +591,22 @@ function(){
    var html="<div class='row'>";
    if (viewData[i].IndividualsClient) 
    {
-    
      var splitValueClient = viewData[i].IndividualsClient.split(";");
-
      splitValueClient = splitValueClient.filter(item => item);
-
       if(splitValueClient.length==0)
       {
         html+=`<div class="col-sm-6 main-left-column"><div class="row"><div class="col-common col-sm-12"><div class="form-group"><input type="text" class="SignClient form-control" placeholder="Individuals with Significant (Client):" value=""><button class="btn btn-primary add-icon" id="btneditClient">
-        <i class="glyphicon glyphicon-plus">+</i>
+        <span class="addicon"></span>
         </button></div><div class="SignParaDiv">`
       }
-
+   
      for(let i=0;i<splitValueClient.length;i++)
      {
 
       if(i==0&&splitValueClient[i])
       {
         html+=`<div class="col-sm-6 main-left-column"><div class="row"><div class="col-common col-sm-12"><div class="form-group"><input type="text" class="SignClient form-control" placeholder="Individuals with Significant (Client):" value='${splitValueClient[i]}'><button class="btn btn-primary add-icon" id="btneditClient">
-        <i class="glyphicon glyphicon-plus">+</i>
+        <span class="addicon"></span>
         </button></div><div class="SignParaDiv">`
       }
       else if(splitValueClient[i]){
@@ -621,8 +616,8 @@ function(){
         <div class="form-group">
           <input type="text" class="SignClient form-control" value="${splitValueClient[i]}">
           <button class="btn btn-secodary remove-icon">
-        <i class="glyphicon glyphicon-trash">-</i>
-        </button>
+          <span class ="removeicon"></span>
+          </button>
         </div>
         </div>
         </div>`;
@@ -635,7 +630,7 @@ function(){
    else
    {
     html+=`<div class="col-sm-6 main-left-column"><div class="row"><div class="col-common col-sm-12"><div class="form-group"><input type="text" class="SignClient form-control" placeholder="Individuals with Significant (Client):" value=""><button class="btn btn-primary add-icon" id="btneditClient">
-    <i class="glyphicon glyphicon-plus">+</i>
+    <span class="addicon"></span>
     </button></div><div class="SignParaDiv">`
     html+='</div></div>'
    }
@@ -652,7 +647,7 @@ function(){
       if(splitValueAdverseNames.length==0)
       {
         html+=`<div class="col-common col-sm-12"><div class="form-group"><input type="text" class="Adverse form-control" placeholder="Potential Adversaries" value=""><button class="btn btn-primary add-icon" id="btneditAdverse">
-        <i class="glyphicon glyphicon-plus">+</i>
+        <span class="addicon"></span>
         </button></div><div class="ParAdverseName">`
       }
 
@@ -662,7 +657,7 @@ function(){
       if(i==0&&splitValueAdverseNames[i])
       {
         html+=`<div class="col-common col-sm-12"><div class="form-group"><input type="text" class="Adverse form-control" placeholder="Potential Adversaries" value='${splitValueAdverseNames[i]}'><button class="btn btn-primary add-icon" id="btneditAdverse">
-        <i class="glyphicon glyphicon-plus">+</i>
+        <span class="addicon"></span>
         </button></div><div class="ParAdverseName">`
       }
 
@@ -673,8 +668,8 @@ function(){
         <div class="form-group">
           <input type="text" class="Adverse form-control" value="${splitValueAdverseNames[i]}">
           <button class="btn btn-secodary remove-icon">
-        <i class="glyphicon glyphicon-trash">-</i>
-        </button>
+          <span class ="removeicon"></span>
+          </button>
         </div>
         </div>
         </div>`;
@@ -687,7 +682,7 @@ function(){
    else
    {
     html+=`<div class="col-common col-sm-12"><div class="form-group"><input type="text" class="Adverse form-control" placeholder="Potential Adversaries" value=""><button class="btn btn-primary add-icon" id="btneditAdverse">
-    <i class="glyphicon glyphicon-plus">+</i>
+    <span class="addicon"></span>
     </button></div><div class="ParAdverseName">`
     html+='</div></div></div>'
    }
@@ -704,7 +699,7 @@ function(){
     if(splitValueAdverse.length==0)
     {
       html+=`<div class="col-sm-6 main-right-column"><div class="row"><div class="col-common col-sm-12"><div class="form-group"><input type="text" class="SignAdverse form-control" placeholder="Individuals with Significant (Adversary)" value=""> <button class="btn btn-primary add-icon" id="btneditSignAdverse">
-      <i class="glyphicon glyphicon-plus">+</i>
+      <span class="addicon"></span>
       </button></div><div class="InAdverse">`
     }
 
@@ -714,7 +709,7 @@ function(){
       if(i==0&&splitValueAdverse[i])
       {
         html+=`<div class="col-sm-6 main-right-column"><div class="row"><div class="col-common col-sm-12"><div class="form-group"><input type="text" class="SignAdverse form-control" placeholder="Individuals with Significant (Adversary)" value='${splitValueAdverse[i]}'> <button class="btn btn-primary add-icon" id="btneditSignAdverse">
-        <i class="glyphicon glyphicon-plus">+</i>
+        <span class="addicon"></span>
         </button></div><div class="InAdverse">`
       }
       else if(splitValueAdverse[i]){
@@ -724,8 +719,8 @@ function(){
         <div class="form-group">
           <input type="text" class="SignAdverse form-control" value="${splitValueAdverse[i]}">
           <button class="btn btn-secodary remove-icon">
-        <i class="glyphicon glyphicon-trash">-</i>
-        </button>
+          <span class ="removeicon"></span>
+          </button>
         </div>
         </div>
         </div>`;
@@ -738,7 +733,7 @@ function(){
    else
    {
     html+=`<div class="col-sm-6 main-right-column"><div class="row"><div class="col-common col-sm-12"><div class="form-group"><input type="text" class="SignAdverse form-control" placeholder="Individuals with Significant (Adversary)" value=""> <button class="btn btn-primary add-icon" id="btneditSignAdverse">
-    <i class="glyphicon glyphicon-plus">+</i>
+    <span class="addicon"></span>
     </button></div><div class="InAdverse">`
     html+='</div></div>'
    }
@@ -752,7 +747,7 @@ function(){
     if(splitValueNonAdverse.length==0)
     {
       html+=`<div class="col-common col-sm-12"><div class="form-group"><input type="text" class="nonAdverse form-control" placeholder="Other Individuals" value=""><button class="btn btn-primary add-icon" id="btneditnonAdverseDel">
-      <i class="glyphicon glyphicon-plus">+</i>
+      <span class="addicon"></span>
       </button></div><div class="nonParAdverse">`
     }
 
@@ -763,7 +758,7 @@ function(){
       if(i==0&&splitValueNonAdverse[i])
       {
         html+=`<div class="col-common col-sm-12"><div class="form-group"><input type="text" class="nonAdverse form-control" placeholder="Other Individuals" value="${splitValueNonAdverse[i]}"><button class="btn btn-primary add-icon" id="btneditnonAdverseDel">
-        <i class="glyphicon glyphicon-plus">+</i>
+      <span class="addicon"></span>
         </button></div><div class="nonParAdverse">`
       }
      else if(splitValueNonAdverse[i]){
@@ -773,8 +768,8 @@ function(){
        <div class="form-group">
          <input type="text" class="nonAdverse form-control" value="${splitValueNonAdverse[i]}">
          <button class="btn btn-secodary remove-icon">
-        <i class="glyphicon glyphicon-trash">-</i>
-        </button>
+         <span class ="removeicon"></span>
+         </button>
        </div>
        </div>
        </div>`;
@@ -787,8 +782,8 @@ function(){
   else
   {
     html+=`<div class="col-common col-sm-12"><div class="form-group"><input type="text" class="nonAdverse form-control" placeholder="Other Individuals" value=""><button class="btn btn-primary add-icon" id="btneditnonAdverseDel">
-      <i class="glyphicon glyphicon-plus">+</i>
-      </button></div><div class="nonParAdverse">`
+    <span class="addicon"></span>
+    </button></div><div class="nonParAdverse">`
       html+='</div></div>'
   }
 

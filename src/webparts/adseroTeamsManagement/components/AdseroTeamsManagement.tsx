@@ -139,8 +139,8 @@ export default class AdseroTeamsManagement1 extends React.Component<
       <div class="col-common col-sm-12">
       <div class="form-group">
         <input type="text" class="SignClient form-control">
-        <button class="btn btn-secodary remove-icon">
-        <i class="glyphicon glyphicon-trash">-</i>
+        <button class="btn remove-icon">
+        <span class ="removeicon"></span>
         </button>
       </div>
       </div>
@@ -149,13 +149,13 @@ export default class AdseroTeamsManagement1 extends React.Component<
     });
 
     $(document).on("click", "#btnAdverse", function (e) {
-      e.stopImmediatePropagation();
+      e.stopImmediatePropagation(); 
       var clientAdd = `<div class="row">
       <div class="col-common col-sm-12">
       <div class="form-group">
         <input type="text" class="Adverse form-control">
-    <button class="btn btn-secodary remove-icon">
-        <i class="glyphicon glyphicon-trash">-</i>
+    <button class="btn remove-icon">
+    <span class ="removeicon"></span>
         </button>
       </div>
       </div>
@@ -169,8 +169,8 @@ export default class AdseroTeamsManagement1 extends React.Component<
       <div class="col-common col-sm-12">
       <div class="form-group">
         <input type="text" class="SignAdverse form-control">
-    <button class="btn btn-secodary remove-icon">
-        <i class="glyphicon glyphicon-trash">-</i>
+    <button class="btn remove-icon">
+    <span class ="removeicon"></span>
         </button>
 
       </div>
@@ -185,15 +185,15 @@ export default class AdseroTeamsManagement1 extends React.Component<
       <div class="col-common col-sm-12">
       <div class="form-group">
         <input type="text" class="nonAdverse form-control">
-    <button class="btn btn-secodary remove-icon">
-        <i class="glyphicon glyphicon-trash">-</i>
+    <button class="btn remove-icon">
+    <span class ="removeicon"></span>
         </button>
       </div>
       </div>
       </div>`;
       $(".nonParAdverse").append(clientAdd);
     });
-
+ 
     $(document).on("click", ".remove-icon", function (e) {
       e.stopImmediatePropagation();
       $(this).parent().remove();
@@ -283,7 +283,7 @@ export default class AdseroTeamsManagement1 extends React.Component<
       }else
       {
         $("#btnSave").attr("disabled", true);
-      }
+      }     
     });
     $(document).on("click", ".sign-ctrlcheck", function (e) {
       console.log(e);
@@ -1236,7 +1236,7 @@ public clientSave = async () => {
                          >
                            Dashboard
                          </button>
-                       </div>
+                       </div>  
                      </div>
                    </div>:""
                   );
@@ -1358,9 +1358,9 @@ public clientSave = async () => {
     <div className="row">
     <div className="col-sm-12">
     <div className="row">
-    <div className="mandatoryInfo text-right pr-1"><span className="MStar">*</span><label>Mandatory Field</label></div>
-    
-    <div className="form-group">
+    <div className="mandatoryInfo col-sm-12 pr-1"><span className="MStar">*</span><label>Mandatory Field</label></div>
+       
+    <div className="potential-client-sec">
 
      
       <div className="col-common col-sm-12 form-group mand">
@@ -1371,7 +1371,7 @@ public clientSave = async () => {
     </div>
     </div>
     </div>
-
+    
     <div className="row" style={{display:"none"}}>
     <div className="col-sm-6 main-left-column">
     <div className="row">
@@ -1405,7 +1405,8 @@ public clientSave = async () => {
 
     <input type="text" className="SignClient form-control" placeholder="Individuals with Significant (Client):" />
     <button className="btn btn-primary add-icon" id="btnClient">
-    <i className="glyphicon glyphicon-plus">+</i>
+      <span className="addicon"></span>
+    {/* <i className="glyphicon glyphicon-plus">+</i> */}
     </button>
 
   </div>
@@ -1420,16 +1421,15 @@ public clientSave = async () => {
 </div>
     </div>
     </div>
-    
-
     <div className="">
     <div className="row ">
     <div className="col-common col-sm-12 ">
     <div className="form-group">
-    
+     
       <input type="text" className="Adverse form-control" placeholder="Potential Adversaries" />
       <button className="btn btn-primary add-icon"  id="btnAdverse">
-        <i className="glyphicon glyphicon-plus">+</i>
+      <span className="addicon"></span>
+        {/* <i className="glyphicon glyphicon-plus">+</i> */}
       </button>
 
     </div>
@@ -1458,7 +1458,8 @@ public clientSave = async () => {
 
   <input type="text" className="SignAdverse form-control" placeholder="Individuals with Significant (Adversary)" />
           <button className="btn btn-primary add-icon" id="btnSignAdverse">
-        <i className="glyphicon glyphicon-plus">+</i>
+          <span className="addicon"></span>
+        {/* <i className="glyphicon glyphicon-plus">+</i> */}
       </button>
 
 </div>
@@ -1480,7 +1481,8 @@ public clientSave = async () => {
    
       <input type="text" className="nonAdverse form-control" placeholder="Other Individuals" id="btnnonAdverse" />
       <button className="btn btn-primary add-icon" id="btnnonAdverseDel">
-      <i className="glyphicon glyphicon-plus">+</i>
+      {/* <i className="glyphicon glyphicon-plus">+</i> */}
+      <span className="addicon"></span>
       </button>
  
     </div>
