@@ -11,7 +11,7 @@ import { BaseComponentContext } from "@microsoft/sp-component-base";
 import {
   Carousel,
   CarouselItem,
-  CarouselControl,
+  CarouselControl, 
   CarouselIndicators,
   CarouselCaption,
   Button,

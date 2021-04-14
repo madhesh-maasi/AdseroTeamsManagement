@@ -131,6 +131,15 @@
     background: #f9f3eb;
     /* margin: 10px; */
   }
+ 
+}
+@media screen and (max-width: 642px) {
+  .tile-header {
+    height: 60px;
+}
+.tile-btn-section .btn-sm {
+  font-size: 10px!important;
+}
 }
 .tile-section {
   margin-top: 20px;
@@ -231,11 +240,11 @@ button.btn {
   border-bottom: none !important;
 }
 .modal-footer {
-  padding: 0 40px 20px 40px !important;
+  padding: 0 32px 20px 32px !important;
   border-top: none !important;
 }
 .modal-body {
-  padding: 0 40px !important;
+  padding: 0 32px !important;
 }
 .status-btn {
   text-align: center;
@@ -901,6 +910,7 @@ td.dt-center {
   background-repeat: no-repeat;
   background-size: 100%;
   background-position: center;
+  margin-right: 10px;
 }
 .icon-view {
   background-image: url(../images/icon-view.png);
@@ -932,12 +942,12 @@ td.dt-center {
   right: 10px;
   padding-left: 5px;
   padding-right: 5px;
-  height: 35px;
+  height: 38px;
   width: 30px;
   border-radius: 0%;
 }
 .add-icon {
-  right: 42px;
+  right: 16px;
 }
 .custom-alert {
   padding: 5px;
@@ -1302,23 +1312,170 @@ div#Client_length select {
 
 /* nishanth */
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 12px !important;
   width: 100%;
+  /* border-radius: 0 !important; */
 }
 .modal-dialog {
-  max-width: 900px!important;
+  max-width: 800px!important;
 }
 .Adverse.form-control, .nonAdverse.form-control, .SignAdverse.form-control, .SignClient.form-control, .SignParaDiv.form-control {
-  width: calc(100% - 45px)!important;
+  width: calc(100% - 38px)!important;
   margin: 0;
 }
 .mandatoryInfo {
   padding-right: 15px;
   margin-bottom: 5px!important; 
 }
+.mandatoryInfo.text-right.pr-1 {
+  margin-left: 10px;
+}
+
 button#btnClient, #btnAdverse {
-  right: 19px;
+  right: 16px;
 }
 button#btnSignAdverse, #btnnonAdverseDel{
-right:19px;
+right:16px;
+}
+
+.addicon{
+  background-image: url(../Images/addicon.png);
+    height: 15px;
+    width: 15px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    right: 6px;
+    top: 11px;
+
+}
+.removeicon{
+  background-image: url(../Images/removeicon.png);
+  height: 20px;
+  width: 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  right: 12px;
+  top: 9px;
+}
+button.btn.btn-primary.remove-icon {
+  margin-right: 10px;
+}
+.form-control{
+  border-radius: 0  !important;
+}
+
+.alert.alert-warning.custom-alert ul li .glyphicon-ok::before{
+    content: '✓';
+    /* color: green; */
+}
+
+.alert.alert-warning.custom-alert ul li .glyphicon-remove::before {
+  content: 'X';
+  /* color: red; */
+}
+
+.alert.alert-warning.custom-alert
+.col-common.col-sm-12.form-group.mand {
+  margin-bottom: 0 !important;
+}
+.btn-primary.disabled, .btn-primary:disabled {
+  cursor: not-allowed !important;
+}
+.mandatoryInfo  label{
+  margin-bottom: 0 !important;
+}
+.col-common input::placeholder {
+  color: #cacaca;
+}
+.potential-client-sec{
+  width:100%;
+}
+.dashboard-head .dropdown {
+  left: 324px;
+}
+.row.goods-details{
+  padding-bottom: 15px !important;
+}
+h5{
+  font-size: 1rem!important;
+}
+.ajs-button.ajs-cancel{
+  color: #7a7a7a!important;
+  border: 1px solid #7a7a7a!important;
+  background: transparent!important;
+  border-radius: 0!important;
+}
+.btn-light {
+  background: transparent!important;
+  color: #7a7a7a;
+  border-color: #d3d9df!important;
+  border-radius: 0!important;
+  padding-right: 22px !important;
+  padding-bottom: 1px !important;
+  padding-top: 3px!important;
+  padding-left: 19px!important;
+}
+
+.alertify .ajs-footer .ajs-buttons.ajs-primary {
+  display: flex;
+  flex-direction: row-reverse;
+}
+button.btn.dropdown-toggle.btn-light {
+  width: 200px;
+}
+p.goodsresult{
+  line-break: anywhere;
+}
+.ag-cell.ag-cell-not-inline-editing.ag-cell-auto-height.ag-cell-value.ag-cell-wrap-text {
+  line-height: 1;
+}
+
+
+@media screen and (max-width: 640px) {
+
+  .tile-title-section {
+    margin-bottom: 16px;
+    height: 63px;
+  }
+
+button.btn.btn-sm.btn-primary {
+  margin: 4px!important;
+}
+.col-1.col-sm-1.text-center {
+  align-self: center;
+}
+.modal-body {
+  margin-left: -58px;
+}
+.dashboard-head {
+  margin-left: 0px;
+}
+.nav-back {
+  width: 23px;
+  height: 17px;
+  margin: 0px!important;
+}
+
+.dashboard-head h3, .summary-head h3 {
+  color: #b38c58;
+  margin-left: 20px;
+  font-size: 10px;
+}
+.search-div.input-group {
+  margin-left: 10px!important;
+  margin-right: 31px!important;
+  margin-bottom: 10px;
+}
+button.btn.dropdown-toggle.btn-light {
+  margin-bottom: 5px!important;
+  margin-left: 10px!important;
+  
+}
+.dashboard-head .dropdown {
+  left: 0px!important;
+}
 }
