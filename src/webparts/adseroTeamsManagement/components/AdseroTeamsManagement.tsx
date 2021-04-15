@@ -60,6 +60,8 @@ export interface IcarosuelState {
   showIntakeDashboard:boolean;
   allClientIntakeData:any;
   ClientIntakeAdmin:boolean;
+  ClientIntakereadUser:boolean;
+  ClientIntakeRepUser:Boolean;
 
 }
 var slides = [];
@@ -103,7 +105,8 @@ export default class AdseroTeamsManagement1 extends React.Component<
     super(props);
     sp.setup({
       sp: {
-        baseUrl: this.props.siteUrl,
+       // baseUrl: "https://adserolegal.sharepoint.com/sites/dev", //for live
+        baseUrl: "https://chandrudemo.sharepoint.com/sites/ADSERO", //for dev
       },
     });
 
@@ -127,7 +130,9 @@ export default class AdseroTeamsManagement1 extends React.Component<
       showIntakeModal:false,
       showIntakeDashboard:false,
       allClientIntakeData:[],
-      ClientIntakeAdmin:false
+      ClientIntakeAdmin:false,
+      ClientIntakereadUser:false,
+      ClientIntakeRepUser:false,
     };
     
     this.loadProfilepics();
@@ -198,49 +203,6 @@ export default class AdseroTeamsManagement1 extends React.Component<
       e.stopImmediatePropagation();
       $(this).parent().remove();
     });
-
-    // $(document).on("click", "#btnSave",  (e) =>
-    // {
-    //   e.stopImmediatePropagation();
-    //   clientvalue=[];
-    //   adversvalue=[];
-    //   potentialadversarievalue=[];
-    //   otherindivualvalue=[];
-
-    //   $("#btnSave").attr("disabled", true);
-    //   SignClientRender = "";
-    //   AdverseNameRender = "";
-    //   SignAdverseRender = "";
-    //   NonAdverseRender = "";
-    //   //$('#btnSave').click((e)=>{
-    //   var SignClient = document.getElementsByClassName("SignClient");
-    //   for (let i = 0; i < SignClient.length; i++) {
-    //     if (SignClient[i])
-    //       SignClientRender =
-    //         SignClientRender + (SignClient[i])["value"] + ";";
-    //   }
-
-    //   var AdverseName = document.getElementsByClassName("Adverse");
-    //   for (let i = 0; i < AdverseName.length; i++) {
-    //     if (AdverseName[i])
-    //       AdverseNameRender =
-    //         AdverseNameRender + (AdverseName[i])["value"] + ";";
-    //   }
-    //   var SignAdverse = document.getElementsByClassName("SignAdverse");
-    //   for (let i = 0; i < SignAdverse.length; i++) {
-    //     if (SignAdverse[i])
-    //       SignAdverseRender =
-    //         SignAdverseRender + (SignAdverse[i])["value"] + ";";
-    //   }
-    //   var NonAdverse = document.getElementsByClassName("nonAdverse");
-    //   for (let i = 0; i < NonAdverse.length; i++) {
-    //     if (NonAdverse[i])
-    //       NonAdverseRender =
-    //         NonAdverseRender + (NonAdverse[i])["value"] + ";";
-    //   }
-
-    //   this.mandatoryvalidation();
-    // });
 
     $(document).on('keypress','.SignClient,.SignAdverse,.Adverse,.nonAdverse',function(e)
     {
@@ -669,21 +631,22 @@ export default class AdseroTeamsManagement1 extends React.Component<
     await sp.web.lists
       .getByTitle("ConfigList")
       .items.filter("Visible eq 1")
-      .orderBy("Order", true)
+      .orderBy("Order0", true)
       .get()
       .then((allConfigs) => {
         console.log(allConfigs);
+        allConfigs= allConfigs.sort(function(a, b){return a.Order0 - b.Order0});
         for (let i = 0; i < allConfigs.length; i++) {
           var item = allConfigs[i];
           if (item.AccessType == "Group") {
             if (item.GroupType == "SharePoint") {
               var spgroup = this.state.currentUserGroups.filter((g) => {
-                return g.Title == item.SharePointGroupName;
+                return item.SharePointGroupName.indexOf(g.Title)!=-1;
               });
               spgroup.length > 0 ? tilesArray.push({ title: item.Title }) : "";
             } else if (item.GroupType == "O365") {
               var string = {
-                groupIds: item.AzureGroupID,
+                "groupIds":[item.AzureGroupID]
               };
               this.props.graphClient
                 .api("/me/checkMemberGroups")
@@ -703,7 +666,7 @@ export default class AdseroTeamsManagement1 extends React.Component<
             }
           }
         }
-        console.log(tilesArray);
+
         this.setState({ tilesItems: tilesArray });
       });
   }
@@ -903,6 +866,7 @@ public getReadGroupUsers=async()=>
         if(CrntUserEmail==items[i].Email)
         {
           ReadUser=true;
+          this.setState({ClientIntakereadUser:true});
         }
     }
     await this.getRecipientUserGroupUsers()
@@ -922,8 +886,7 @@ public getRecipientUserGroupUsers=async()=>
         if(CrntUserEmail==items[i].Email)
         {
           RecipientUser=true;
-          
-
+          this.setState({ClientIntakeRepUser:true});
         }
     }
     
@@ -934,8 +897,8 @@ public getRecipientUserGroupUsers=async()=>
 
     if(RecipientUser||Adminuser||ReadUser)
     await this.fetchclientdetails();
-    else
-    alertify.message("You Don't have Permission to access this page");
+    // else
+    // alertify.message("You Don't have Permission to access this page");
 
   }).catch(function (error) 
   {
@@ -1220,13 +1183,13 @@ public clientSave = async () => {
                          </div>
                        </div>
                        <div className="tile-btn-section text-right">
-                         <button
+                         { this.state.ClientIntakeAdmin ? <button
                            className="btn btn-sm btn-primary"
                            onClick={()=>this.setState({showIntakeModal:true})}
                          >
                            Add
-                         </button>
-                         <button
+                         </button>:""}
+                         { this.state.ClientIntakeAdmin||this.state.ClientIntakeRepUser||this.state.ClientIntakereadUser ?  <button
                            className="btn btn-sm btn-primary"
                            onClick={(e) =>{
                              this.setState({ landingActive: false,showIntakeDashboard:true });
@@ -1235,7 +1198,7 @@ public clientSave = async () => {
                            }
                          >
                            Dashboard
-                         </button>
+                         </button>:""}
                        </div>  
                      </div>
                    </div>:""
