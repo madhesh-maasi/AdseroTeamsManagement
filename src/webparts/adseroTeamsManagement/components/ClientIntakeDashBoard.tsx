@@ -84,7 +84,8 @@ var NonAdverseRender = "";
     super(props);
     sp.setup({
       sp: {
-        baseUrl: this.props.siteUrl,
+              // baseUrl: "https://adserolegal.sharepoint.com/sites/dev", //for live
+              baseUrl: "https://chandrudemo.sharepoint.com/sites/ADSERO", //for dev
       },
     });    
     this.state = { 
@@ -239,29 +240,7 @@ var NonAdverseRender = "";
 
     ];
   
-     conditionalRowStyles = [
-    {
-      when: row => row.Color == "Red",
-      style: {
-        backgroundColor: "#f29198",
-        color: 'black'
-      },
-    },
-    {
-      when: row => row.Color == "Orange",
-      style: {
-        backgroundColor: '#ffe4b3',
-        color: 'black'
-      },
-    },
-    {
-      when: row => row.Color == "Clear",
-      style: {
-        backgroundColor: 'White',
-        color: 'black'
-      },
-    },
-  ]; 
+
     this.getTableItems();
 
     $(document).on("click", "#btneditClient", function (e) {
@@ -1093,4 +1072,5 @@ else
     
   }
 }
+
 

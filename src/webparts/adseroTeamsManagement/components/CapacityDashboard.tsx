@@ -86,7 +86,8 @@ export default class AdseroTeamsManagement extends React.Component<
     super(props);
     sp.setup({
       sp: {
-        baseUrl: this.props.siteUrl,
+               // baseUrl: "https://adserolegal.sharepoint.com/sites/dev", //for live
+               baseUrl: "https://chandrudemo.sharepoint.com/sites/ADSERO", //for dev
       },
     });
     this.state = {

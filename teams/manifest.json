@@ -1,0 +1,58 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.9/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.9",
+    "version": "1.0.0",
+    "showLoadingIndicator": false,
+    "id": "dd756bca-2a98-4e4b-b96e-6ecb1f5df110",
+    "packageName": "com.teams.devapp",
+    "developer": {
+        "name": "TechnoRUCS",
+        "websiteUrl": "https://chandrudemo.sharepoint.com",
+        "privacyUrl": "https://chandrudemo.sharepoint.com",
+        "termsOfUseUrl": "https://chandrudemo.sharepoint.com"
+    },
+    "icons": {
+        "color": "color.png",
+        "outline": "outline.png"
+    },
+    "name": {
+        "short": "Client Intake Solution (Local)",
+        "full": "Client Intake Solution (Local) Deployment"
+    },
+    "description": {
+        "short": "This is short desc of Local deployment",
+        "full": "This is Full desc of Local deployment"
+    },
+    "accentColor": "#781EFC",
+    "staticTabs": [
+        {
+            "entityId": "300001",
+            "name": "Systems Dashboard",
+            "contentUrl": "https://{teamSiteDomain}/_layouts/15/TeamsLogon.aspx?SPFX=true&dest=/_layouts/15/teamshostedapp.aspx%3Fteams%26personal%26componentId=29ef1f98-9d80-4bc4-9e81-b590b1fb4fc2%26forceLocale={locale}",
+            "websiteUrl": "https://chandrudemo.sharepoint.com/sites/adsero",
+            "scopes": [
+                "personal"
+            ]
+        },
+        {
+            "entityId": "about",
+            "scopes": [
+                "personal"
+            ]
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "chandrudemo.sharepoint.com",
+        "*.login.microsoftonline.com",
+        "*.sharepoint.com",
+        "*.sharepoint-df.com",
+        "spoppe-a.akamaihd.net",
+        "spoprod-a.akamaihd.net",
+        "resourceseng.blob.core.windows.net",
+        "msft.spoppe.com"
+    ]
+}
