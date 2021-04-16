@@ -38,6 +38,7 @@ import "@pnp/sp/site-users/web";
 import CapacityDashboard from "./CapacityDashboard";
 import ClientIntakeDashboard from "./ClientIntakeDashBoard";
 var profileListUrl = "/sites/adsero/ProfilePictures/";
+var SiteImageUrl = "/sites/adsero/SiteImages/";
 // import { BsPlus } from "react-icons/bs"; 
 export interface IcarosuelState {
   pageSwitch:string;
@@ -62,6 +63,7 @@ export interface IcarosuelState {
   ClientIntakeAdmin:boolean;
   ClientIntakereadUser:boolean;
   ClientIntakeRepUser:Boolean;
+  BannerImage:string;
 
 }
 var slides = [];
@@ -133,11 +135,13 @@ export default class AdseroTeamsManagement1 extends React.Component<
       ClientIntakeAdmin:false,
       ClientIntakereadUser:false,
       ClientIntakeRepUser:false,
+      BannerImage:"",
     };
     
     this.loadProfilepics();
     this.loadUsersBirthday();
     this.getCurrentUserDetails();
+    this.getbannerimage();
     $(document).on("click", "#btnClient", function (e) {
       e.stopImmediatePropagation();
       var clientAdd = `<div class="row">
@@ -681,7 +685,17 @@ export default class AdseroTeamsManagement1 extends React.Component<
         this.setState({ allProfilePics: proItems });
       });
   }
-
+  async getbannerimage() {
+    await sp.web
+      .getFolderByServerRelativeUrl(SiteImageUrl)
+      .files.select("*,listItemAllFields")
+      .expand("listItemAllFields")
+      .get()
+      .then((bannerimg) => {
+        this.setState({BannerImage: bannerimg[0].ServerRelativeUrl});
+        
+      });
+  }
   public loadUsersBirthday = () => {
     this.props.graphClient
       .api("/users")
@@ -775,6 +789,7 @@ export default class AdseroTeamsManagement1 extends React.Component<
         });
       });
   };
+
   public getbill = (e) => {
     const test = e.target.name;
     const EnteredVal = e.target.value;
@@ -1066,7 +1081,9 @@ public clientSave = async () => {
   // TODO Rendering
   public render(): React.ReactElement<IAdseroTeamsManagementProps> {
     return this.state.landingActive ? (
-      <div>
+      <div>  
+        <div className="banner-section">
+        <img src={this.state.BannerImage} className="banner-img" alt=""/>
         <Row className="banner-image">
           <Col md={{ size: 6 }} lg={{ size: 8 }} className="left">
             <h2 className="banner-caps">Integrity. Respect. Trust</h2>
@@ -1136,6 +1153,7 @@ public clientSave = async () => {
             </Carousel>
           </Col>:""}
         </Row>
+        </div>
         <div className="tile-section">
           <div className="row">
             {this.state.tilesItems.length > 0
