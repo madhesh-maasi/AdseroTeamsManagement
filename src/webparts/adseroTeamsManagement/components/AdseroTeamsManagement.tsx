@@ -656,7 +656,7 @@ export default class AdseroTeamsManagement1 extends React.Component<
                 .api("/me/checkMemberGroups")
                 .post(string)
                 .then((aGroups) => {
-                  aGroups.length > 0
+                  aGroups.value.length > 0
                     ? tilesArray.push({ title: item.Title })
                     : "";
                 });
@@ -1099,6 +1099,7 @@ public clientSave = async () => {
           > 
             {
               (slides = this.state.CarouselItems.map((item) => {
+                var email = `mailto:${item.mail}?subject=Birthday Wishes&body=Happy Birthday to ${item.displayname}`
                 return (
                   <CarouselItem key={item.id}>
                     <div className="caro-image">
@@ -1118,7 +1119,11 @@ public clientSave = async () => {
                       />{" "}
                     </div>   
                     <div className="text-right">
-                      <button className="btn btn-theme-lg">Send Wish</button>{" "}
+                     
+                     
+                    <a href={email}>     
+                    <button className="btn btn-theme-lg ">Send Wish</button>{" "}
+                    </a>
                     </div>
                   </CarouselItem>  
                 );
