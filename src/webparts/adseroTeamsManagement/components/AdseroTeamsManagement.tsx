@@ -38,7 +38,7 @@ import "@pnp/sp/site-users/web";
 import CapacityDashboard from "./CapacityDashboard";
 import ClientIntakeDashboard from "./ClientIntakeDashBoard";
 var profileListUrl = "/sites/adsero/ProfilePictures/";
-import { BsPlus } from "react-icons/bs";
+// import { BsPlus } from "react-icons/bs"; 
 export interface IcarosuelState {
   pageSwitch:string;
   landingActive: boolean;
@@ -730,7 +730,7 @@ export default class AdseroTeamsManagement1 extends React.Component<
                       displayname: user.displayName,
                       src: profileUrl[0].ServerRelativeUrl,
                       altText: "Happy Birthday " + user.displayName + "!",
-                      info: `Today ${user.displayName}, Send Him a Great Wish.`,
+                      info: `Today ${user.displayName}'s Birthday, Send Him a Great Wish.`,
                       caption: "Happy Birthday " + user.displayName + "!",
                     });
                   });
@@ -1061,7 +1061,7 @@ public clientSave = async () => {
 
   this.mandatoryvalidation();
 
-}
+}  
 
   // TODO Rendering
   public render(): React.ReactElement<IAdseroTeamsManagementProps> {
@@ -1075,10 +1075,11 @@ public clientSave = async () => {
           <Col
             xs={{ size: 12 }}
             sm={{ size: 12 }}
-            md={{ size: 5 }}
+            md={{ size: 3 }}
             lg={{ size: 3 }}
+            xl={{ size: 2 }}
             className="right"
-          >
+          > 
             {
               (slides = this.state.CarouselItems.map((item) => {
                 return (
@@ -1089,19 +1090,20 @@ public clientSave = async () => {
                         alt={item.altText}
                         height="300px"
                         width="100%"
-                      />
-                    </div>
-                    <div className="caro-caption">
+                      />   
+                    </div>  
+                    <div className="caro-caption d-block">
                       <div className="caro-slogo"></div>
                       <CarouselCaption
+                      className="d-block"
                         captionText={item.info}
                         captionHeader={item.caption}
                       />{" "}
-                    </div>
+                    </div>   
                     <div className="text-right">
-                      <Button className="btn-theme-lg">Send Wish</Button>{" "}
+                      <button className="btn btn-theme-lg">Send Wish</button>{" "}
                     </div>
-                  </CarouselItem>
+                  </CarouselItem>  
                 );
               }))
             }
@@ -1211,11 +1213,11 @@ public clientSave = async () => {
           isOpen={this.state.showCapacityModal}
           toggle={this.capacityToggle}
           className="capacity-modal"
-        >
+        > 
           <ModalHeader toggle={this.capacityToggle} className="text-center">
             Add or Edit Allocation
           </ModalHeader>
-          <ModalBody>
+          <ModalBody>   
             <div className="cur-user-info text-right">
               <span>Hi, {this.state.currentUserDetails.displayName}</span>
               <img
@@ -1307,12 +1309,11 @@ public clientSave = async () => {
             </Button>{" "}
           </ModalFooter>
         </Modal>
-
-        <Modal
+        <Modal 
           isOpen={this.state.showIntakeModal}
           toggle={()=>this.setState({showIntakeModal:false})}
-          className="capacity-modal"
-        >
+          className="client-intake-modal" 
+        > 
           <ModalHeader  className="text-center">
             Add Client Intake
           </ModalHeader>
@@ -1322,7 +1323,7 @@ public clientSave = async () => {
     <div className="col-sm-12">
     <div className="row">
     <div className="mandatoryInfo col-sm-12 pr-1"><span className="MStar">*</span><label>Mandatory Field</label></div>
-       
+        
     <div className="potential-client-sec">
 
      

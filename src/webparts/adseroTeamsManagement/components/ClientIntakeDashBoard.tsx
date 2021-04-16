@@ -467,27 +467,27 @@ var NonAdverseRender = "";
   var userDetails=this.props.RecipentUsersMailDetails;//GroupUsers
 
 
-   html+='<div class="row goods-details"><div class="col-sm-6"><h5 class="goods-label">Potential Client Name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-5"><p class="goodsresult">' +
+   html+='<div class="row goods-details"><div class="col-5 col-sm-6"><h5 class="goods-label">Potential Client Name</h5></div><div class="col-1 col-sm-1 text-center">:</div><div class="col-5 col-sm-5"><p class="goodsresult">' +
    viewData[i].PotentialClientName +
    "</p></div></div>";
 
-   html+='<div class="row goods-details"><div class="col-sm-6"><h5 class="goods-label">Individuals with Significant (Client)</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-5"><p class="goodsresult">' +
+   html+='<div class="row goods-details"><div class="col-5 col-sm-6"><h5 class="goods-label">Individuals with Significant (Client)</h5></div><div class="col-1 col-sm-1 text-center">:</div><div class="col-5 col-sm-5"><p class="goodsresult">' +
    formattedClient +
    "</p></div></div>"; 
 
-   html+='<div class="row goods-details"><div class="col-sm-6"><h5 class="goods-label">Individuals with Significant (Adversary)</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-5"><p class="goodsresult">' +
+   html+='<div class="row goods-details"><div class="col-5 col-sm-6"><h5 class="goods-label">Individuals with Significant (Adversary)</h5></div><div class="col-1 col-sm-1 text-center">:</div><div class="col-5 col-sm-5"><p class="goodsresult">' +
    formattedAdverse +
    "</p></div></div>";
 
-   html+='<div class="row goods-details"><div class="col-sm-6"><h5 class="goods-label">Potential Adversaries</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-5"><p class="goodsresult">' +
+   html+='<div class="row goods-details"><div class="col-5 col-sm-6"><h5 class="goods-label">Potential Adversaries</h5></div><div class="col-1 col-sm-1 text-center">:</div><div class="col-5 col-sm-5"><p class="goodsresult">' +
    formattedAdverseNames +
    "</p></div></div>";
 
-   html+='<div class="row goods-details"><div class="col-sm-6"><h5 class="goods-label">Other Individuals</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-5"><p class="goodsresult">' +
+   html+='<div class="row goods-details"><div class="col-5 col-sm-6"><h5 class="goods-label">Other Individuals</h5></div><div class="col-1 col-sm-1 text-center">:</div><div class="col-5 col-sm-5"><p class="goodsresult">' +
    formattedNonAdverse +
    "</p></div></div>";   
 
-   var htmlTbl="<table class='user-table'><thead><tr><th>User Name</th><th>Response</th><th>Comments</th></tr></thead><tbody>"  
+   var htmlTbl="<div class='view-table-sec'><table class='user-table'><thead><tr><th>User Name</th><th>Response</th><th>Comments</th></tr></thead><tbody>"   
    
    if(userDetails.length==0)
    {
@@ -510,7 +510,7 @@ var NonAdverseRender = "";
       htmlTbl+="<tr><td>"+userDetails[j]+"</td><td>N/A</td><td>N/A</td></tr>"
     }
    }
-   htmlTbl+="</tbody></table></div>"
+   htmlTbl+="</tbody></table></div></div>"
  }
  this.setState({viewMultiData:html+htmlTbl,showviewIntakeModal:!this.state.showviewIntakeModal,});
 }
@@ -976,7 +976,7 @@ else
             <Modal
           isOpen={this.state.showeditIntakeModal}
           toggle={()=>this.setState({showeditIntakeModal:!this.state.showeditIntakeModal})}
-          className="capacity-modal"
+          
         >
           <ModalHeader toggle={()=>this.setState({showeditIntakeModal:!this.state.showeditIntakeModal})} className="text-center">
             Edit Client Intake
@@ -1039,7 +1039,7 @@ else
         <Modal
           isOpen={this.state.showviewIntakeModal}
           toggle={()=>this.setState({showviewIntakeModal:!this.state.showviewIntakeModal})}
-          className="capacity-modal"
+          className="client-intake-view-modal"
         >
           <ModalHeader toggle={()=>this.setState({showviewIntakeModal:!this.state.showviewIntakeModal})} className="text-center">
             View Client Intake
