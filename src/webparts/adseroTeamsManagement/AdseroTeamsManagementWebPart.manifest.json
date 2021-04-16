@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
   "id": "29ef1f98-9d80-4bc4-9e81-b590b1fb4fc2",
-  "alias": "AdseroTeamsManagementWebPart",
+  "alias": "TeamsAdsero",
   "componentType": "WebPart",
 
   // The "*" signifies that the version should be taken from the package.json
@@ -17,7 +17,7 @@
   "preconfiguredEntries": [{
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
     "group": { "default": "Other" },
-    "title": { "default": "AdseroTeamsManagement" },
+    "title": { "default": "Teams Adsero" },
     "description": { "default": "AdseroTeamsManagement description" },
     "officeFabricIconFontName": "Page",
     "properties": {
