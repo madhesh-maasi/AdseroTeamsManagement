@@ -982,7 +982,7 @@ else
               getRowStyle={this.getRowStyle}
                 onFirstDataRendered={this.onFirstDataRendered}
                  columnDefs={this.tblcolumns}
-                    rowData={this.state.IntakeTableItems}  pagination={true}  paginationPageSize={this.state.perpageCount} quickFilterText={this.state.filterText} >
+                    rowData={this.state.IntakeTableItems}  pagination={true}  paginationPageSize={10} quickFilterText={this.state.filterText} >
                 </AgGridReact>
                 </div>
               </div>

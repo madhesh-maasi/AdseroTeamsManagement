@@ -77,7 +77,7 @@ export interface ICapacityDashboardState {
   dashStartDate:string,
   dashStartDateFormatedVal: string
 }
-
+var gridApi;
 export default class AdseroTeamsManagement extends React.Component<
   ICapacityDashBoardProps,
   ICapacityDashboardState
@@ -331,6 +331,28 @@ export default class AdseroTeamsManagement extends React.Component<
         this.setState({ CapacityData: ColumnsArray, TableItems: ColumnsArray });
       });
   };
+  public onPageSizeChanged=()=>{
+    var value = document.getElementById('page-size')["value"];
+    // this.setState({perpageCount:Number(value)});
+    gridApi.paginationSetPageSize(Number(value));
+  
+  }
+  public onGridReady(params) {
+    gridApi = params.api;
+   var columnApi = params.columnApi;
+ 
+   var allColumnIds = [];
+   columnApi.getAllColumns().forEach(function (column) {
+     allColumnIds.push(column.colId);
+   });
+ 
+   columnApi.autoSizeColumns(allColumnIds, false);
+ 
+   // gridApi.sizeColumnsToFit();
+   // window.onresize = () => {
+   //    gridApi.sizeColumnsToFit();
+   // }
+ }
   public CapacityChartSearch = (event) => {
     if (event["length"] > 0) {
       var resultarray = event.map((user) => user.id);
@@ -410,7 +432,15 @@ export default class AdseroTeamsManagement extends React.Component<
 
               <div className="datatable-section">
               <div className="ag-theme-alpine" style={ {height: 519, width: "100%" } }>
+              <p>Page Size:</p>
+              <select onChange={()=>this.onPageSizeChanged()} id={"page-size"}>
+                <option value="10" selected>10</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+              </select>
               <AgGridReact
+              onGridReady={this.onGridReady}
                 onFirstDataRendered={this.onFirstDataRendered}
                  columnDefs={this._CapacityColumns}
                     rowData={this.state.TableItems}  pagination={true}  paginationPageSize={10} quickFilterText={this.state.filterText} >
