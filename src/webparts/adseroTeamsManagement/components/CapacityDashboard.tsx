@@ -15,7 +15,7 @@ import {
   CarouselIndicators,
   CarouselCaption,
   Button,
-  Modal,
+  Modal,                          
   ModalHeader,
   ModalBody,
   ModalFooter,
@@ -51,7 +51,7 @@ import DatePicker from "reactstrap-date-picker";
 import * as chartjs from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { AgGridColumn, AgGridReact } from 'ag-grid-react';
-
+import * as $  from 'jquery';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 // import "styled-components";
@@ -74,6 +74,8 @@ export interface ICapacityDashboardState {
   CapacityChartData: any;
   CapSelectedUserName: string;
   CapShowChart: Boolean;
+  dashStartDate:string,
+  dashStartDateFormatedVal: string
 }
 
 export default class AdseroTeamsManagement extends React.Component<
@@ -86,8 +88,7 @@ export default class AdseroTeamsManagement extends React.Component<
     super(props);
     sp.setup({
       sp: {
-               // baseUrl: "https://adserolegal.sharepoint.com/sites/dev", //for live
-               baseUrl: "https://chandrudemo.sharepoint.com/sites/ADSERO", //for dev
+               baseUrl: this.props.siteUrl, //for dev
       },
     });
     this.state = {
@@ -105,6 +106,8 @@ export default class AdseroTeamsManagement extends React.Component<
       CapacityChartData: {},
       CapSelectedUserName: "",
       CapShowChart: false,
+      dashStartDate:"",
+      dashStartDateFormatedVal: ""
     };
 
     this._CapacityColumns= [
@@ -161,11 +164,16 @@ export default class AdseroTeamsManagement extends React.Component<
         }
       }}
     ]
-
-    this.getTableData();
+    var d = new Date()
+    this.getTableData(d,false);
   }
 
-
+  public dashStartDateChange(StartDateValue, StartDateFormatedVal) {
+    this.setState({
+      dashStartDate: StartDateValue, // ISO String, ex: "2016-11-19T12:00:00.000Z"
+      dashStartDateFormatedVal: StartDateFormatedVal, // Formatted String, ex: "11/19/2016"
+    });
+  }
 
   public StartDateChange(StartDateValue, StartDateFormatedVal) {
     this.setState({
@@ -184,17 +192,33 @@ export default class AdseroTeamsManagement extends React.Component<
     console.log(this.state.capselectedUsermail);
     console.log(this.state.StartDateValue);
 
-    if (this.state.capselectedUsermail == "") {
+    if (this.state.allpeoplePicker_User.length == 0) {
       alertify.message("Please enter the user name.");
-    } else if (this.state.StartDateValue == "") {
+      this.setState({
+        CapShowChart: false,
+        CapacityChartData: {},
+      });
+    } else if (!this.state.StartDateValue) {
       alertify.message("Please enter Start Date");
-    } else if (this.state.EndDateValue == "") {
+      this.setState({
+        CapShowChart: false,
+        CapacityChartData: {},
+      });
+    } else if (!this.state.EndDateValue) {
       alertify.message("Please enter End Date");
+      this.setState({
+        CapShowChart: false,
+        CapacityChartData: {},
+      });
     } else if (
       Date.parse(this.state.StartDateValue) >
       Date.parse(this.state.EndDateValue)
     ) {
       alertify.message("Start Date Should be smaller than end date");
+      this.setState({
+        CapShowChart: false,
+        CapacityChartData: {},
+      });
     } else {
       var startDateValue =
         new Date(this.state.StartDateValue).toISOString().split("T")[0] +
@@ -220,37 +244,59 @@ export default class AdseroTeamsManagement extends React.Component<
         )
         .get()
         .then((item: any) => {
-          this.setState({
-            CapShowChart: true,
-            CapacityChartData: {
-              labels: ["Full", "Medium", "Low", "Off"],
-              datasets: [
-                {
-                  data: [
-                    item.filter((li) => li.CapacityLevel == "Full").length,
-                    item.filter((li) => li.CapacityLevel == "Medium").length,
-                    item.filter((li) => li.CapacityLevel == "Low").length,
-                    item.filter((li) => li.CapacityLevel == "Off").length,
-                  ],
-                  backgroundColor: ["#ff7a7a", "#ffbb54", "#63d86f", "#7a7a7a"],
-                  hoverBackgroundColor: [
-                    "#ff7a7a",
-                    "#ffbb54",
-                    "#63d86f",
-                    "#7a7a7a",
-                  ],
-                },
-              ],
-            },
-          });
+          (item.length>0)
+         ?
+            this.setState({
+              CapShowChart: true,
+              CapacityChartData: {
+                labels: ["Full", "Medium", "Low", "Off"],
+                datasets: [
+                  {
+                    data: [
+                      item.filter((li) => li.CapacityLevel == "Full").length,
+                      item.filter((li) => li.CapacityLevel == "Medium").length,
+                      item.filter((li) => li.CapacityLevel == "Low").length,
+                      item.filter((li) => li.CapacityLevel == "Off").length,
+                    ],
+                    backgroundColor: ["#ff7a7a", "#ffbb54", "#63d86f", "#7a7a7a"],
+                    hoverBackgroundColor: [
+                      "#ff7a7a",
+                      "#ffbb54",
+                      "#63d86f",
+                      "#7a7a7a",
+                    ],
+                  },
+                ],
+              },
+            })
+          : 
+          
+            this.setState({
+              CapShowChart: false,
+              CapacityChartData: {},
+            });
+          
+
         });
     }
   };
   // Todo Append to Datatable
 
-  public getTableData = async () => {
+  public getTableData = async (d,check) => {
+    var isAllValueFilled = true;
+    if(check)
+    {
+      if(!this.state.dashStartDate)
+      {
+        alertify.set('notifier','position', 'top-right');
+        alertify.error('Please Select Date');
+        return false;
+      }
+    }
+    
+
     let ColumnsArray = [];
-    const d = new Date().toLocaleDateString();
+     d = new Date(d).toLocaleDateString();
     let list = await sp.web.lists
       .getByTitle("CapacityManagement")
       .items.select(
@@ -271,14 +317,14 @@ export default class AdseroTeamsManagement extends React.Component<
         });
         filterToday.forEach((FData) => {
           let proPic = this.props.ProfileData.filter((all) => {
-            return all.ListItemAllFields.UserNameId == FData.Author.Id;
+            return all.email == FData.Author.EMail;
           });
           ColumnsArray.push({
             name: FData.Author.Title,
             billable: FData.Billable,
             nonbillable: FData.NonBillable,
             capacitylevel: FData.CapacityLevel,
-            profileUrl: proPic[0].ServerRelativeUrl,
+            profileUrl: proPic[0].Image,
           });
         });
         console.log(ColumnsArray);
@@ -301,6 +347,9 @@ export default class AdseroTeamsManagement extends React.Component<
   public onFirstDataRendered = (params) => {
     params.api.sizeColumnsToFit();
   };
+  public getRangeData=()=>{
+
+  }
   public render(): React.ReactElement<ICapacityDashBoardProps> {
     return !this.state.MoveToLanding ? (
       <>
@@ -317,6 +366,37 @@ export default class AdseroTeamsManagement extends React.Component<
                 <div>
                   <h3>Allocation Dashboard</h3>
                 </div>
+                <div className="startDate">
+                <label>Date</label>
+                <DatePicker
+                  id="dashstartdatepicker"
+                  showClearButton={false}
+                  value={this.state.dashStartDate}
+                  onChange={(v, f) => this.dashStartDateChange(v, f)}
+                />
+              </div> 
+
+              <div className="generate-btn">
+                <button
+                  className="btn btn-primary btn-generate"
+                  onClick={() => this.getTableData(this.state.dashStartDate,true)}
+                >
+                  Generate
+                </button>
+                <button
+                  className="btn btn-theme-secondary btn-clear"
+                  onClick={() => {
+                    this.setState({
+                      dashStartDate: "", // ISO String, ex: "2016-11-19T12:00:00.000Z"
+                      dashStartDateFormatedVal: "", // Formatted String, ex: "11/19/2016"
+                    });
+                    this.getTableData(new Date(),false)
+                  }}
+                >   
+                  Clear
+                </button>
+              </div>
+
                 <InputGroup className="search-div">
                   <Input
                     placeholder="Search"

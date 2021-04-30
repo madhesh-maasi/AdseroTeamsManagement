@@ -15,7 +15,6 @@ export interface IAdseroTeamsManagementWebPartProps {
   description: string;
   siteUrl:string;
 }
-
 export default class AdseroTeamsManagementWebPart extends BaseClientSideWebPart<IAdseroTeamsManagementWebPartProps> {
 
   public render(): void {
@@ -27,7 +26,9 @@ export default class AdseroTeamsManagementWebPart extends BaseClientSideWebPart<
             description: this.properties.description,
             context: this.context,
             graphClient: _graphClient,
-            siteUrl: this.context.pageContext.web.absoluteUrl,
+            // siteUrl: "https://adserolegal.sharepoint.com/sites/dev/", //for liv
+            siteUrl: "https://chandrudemo.sharepoint.com/sites/ADSERO/", //for dev
+
       }
     );
 

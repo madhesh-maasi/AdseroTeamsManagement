@@ -3,7 +3,7 @@
     "manifestVersion": "1.9",
     "version": "1.0.0",
     "showLoadingIndicator": false,
-    "id": "dd756bca-2a98-4e4b-b96e-6ecb1f5df110",
+    "id": "29ef1f98-9d80-4bc4-9e81-b590b1fb4fc2",         
     "packageName": "com.teams.devapp",
     "developer": {
         "name": "TechnoRUCS",
@@ -12,8 +12,8 @@
         "termsOfUseUrl": "https://chandrudemo.sharepoint.com"
     },
     "icons": {
-        "color": "color.png",
-        "outline": "outline.png"
+        "color": "29ef1f98-9d80-4bc4-9e81-b590b1fb4fc2_color.png",
+        "outline": "29ef1f98-9d80-4bc4-9e81-b590b1fb4fc2_outline.png"
     },
     "name": {
         "short": "Client Intake Solution (Local)",
