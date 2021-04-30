@@ -241,9 +241,12 @@ button.btn {
 .modal-header button {
   display: none;
 }
-.capacity-modal .modal-title {
+.capacity-modal {
   margin: auto;
 }
+/* .modal-title{
+  margin:auto;
+} */
 .modal-title {
   color: #b38c58;
   font-weight: bold;
@@ -1420,7 +1423,7 @@ button.btn.btn-primary.remove-icon {
   width: 100%;
 }
 .dashboard-head .dropdown {
-  left: 324px;
+  left: 247px;
 }
 .row.goods-details {
   padding-bottom: 15px !important;
@@ -1498,7 +1501,22 @@ p.goodsresult {
   .dropdown {
     width: 222px;
   }
+ 
+  .ragylogo{
+    width: 96px!important;
+    height: 58px !important;
+    margin-top: 10px;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: contain;
+
 }
+
+
+ 
+
+}
+
 @media screen and (max-width: 414px) and (min-width: 362px) {
   .dropdown {
     width: 290px;
@@ -1512,6 +1530,15 @@ p.goodsresult {
   input.search-input.form-control-lg.form-control {
     width: 100%;
   }
+  .ragylogo{
+    width: 96px!important;
+    height: 58px !important;
+    margin-top: 10px;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: contain;
+}
+
 }
 @media screen and (max-width: 601px) and (min-width: 414px) {
   .dropdown {
@@ -1526,6 +1553,16 @@ p.goodsresult {
   input.search-input.form-control-lg.form-control {
     width: 100% !important;
   }
+
+.ragylogo{
+   width: 96px;
+    height: 58px;
+    margin-top: 10px;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: contain;
+
+}
 }
 .banner-image .carousel-indicators {
   margin-bottom: 0;
@@ -1534,10 +1571,33 @@ p.goodsresult {
 .ag-theme-alpine .ag-full-width-row .ag-cell-wrapper.ag-row-group {
   line-height: 20px !important;
 }
-.modal-title {
+/* .modal-title {
   margin: auto;
-}
+} */
 .view-table-sec {
   width: 100%;
   overflow-x: scroll;
 }
+input#rdp-form-control-dashstartdatepicker {
+  height: 29px;
+  margin-bottom: 10px;
+}
+.dashboard-head h3 {
+  padding-right: 60px;
+}
+.modal-header-section{
+  display: flex;
+  justify-content: space-between;
+  margin-left: 15px;
+}
+.ragylogo{
+  background-image: url(../Images/AdseroBlacknew.png);
+  /* position: absolute; */
+  margin-top: 10px;
+  width: 200px;
+  height: 54px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+

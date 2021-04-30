@@ -35,10 +35,17 @@ import "@pnp/sp/webs";
 import "@pnp/sp/files";
 import "@pnp/sp/folders";
 import "@pnp/sp/site-users/web";
+import { graph } from "@pnp/graph";
+import "@pnp/graph/users";
+import "@pnp/graph/photos";
 import CapacityDashboard from "./CapacityDashboard";
 import ClientIntakeDashboard from "./ClientIntakeDashBoard";
+//for dev
 var profileListUrl = "/sites/adsero/ProfilePictures/";
 var SiteImageUrl = "/sites/adsero/SiteImages/";
+//for liv
+// var profileListUrl = "/sites/dev/ProfilePictures/";
+// var SiteImageUrl = "/sites/dev/SiteImages/";
 // import { BsPlus } from "react-icons/bs"; 
 export interface IcarosuelState {
   pageSwitch:string;
@@ -107,9 +114,11 @@ export default class AdseroTeamsManagement1 extends React.Component<
     super(props);
     sp.setup({
       sp: {
-       // baseUrl: "https://adserolegal.sharepoint.com/sites/dev", //for live
-        baseUrl: "https://chandrudemo.sharepoint.com/sites/ADSERO", //for dev
+        baseUrl:this.props.siteUrl, //for dev
       },
+    });
+    graph.setup({
+      spfxContext: this.props.context
     });
 
     this.state = {
@@ -636,39 +645,16 @@ export default class AdseroTeamsManagement1 extends React.Component<
       .getByTitle("ConfigList")
       .items.filter("Visible eq 1")
       .orderBy("Order0", true)
-      .get()
+      .get() 
       .then((allConfigs) => {
         console.log(allConfigs);
         allConfigs= allConfigs.sort(function(a, b){return a.Order0 - b.Order0});
         for (let i = 0; i < allConfigs.length; i++) {
           var item = allConfigs[i];
-          if (item.AccessType == "Group") {
-            if (item.GroupType == "SharePoint") {
-              var spgroup = this.state.currentUserGroups.filter((g) => {
+          var spgroup = this.state.currentUserGroups.filter((g) => {
                 return item.SharePointGroupName.indexOf(g.Title)!=-1;
               });
-              spgroup.length > 0 ? tilesArray.push({ title: item.Title }) : "";
-            } else if (item.GroupType == "O365") {
-              var string = {
-                "groupIds":[item.AzureGroupID]
-              };
-              this.props.graphClient
-                .api("/me/checkMemberGroups")
-                .post(string)
-                .then((aGroups) => {
-                  aGroups.value.length > 0
-                    ? tilesArray.push({ title: item.Title })
-                    : "";
-                });
-            }
-          } else if (item.AccessType == "User") {
-            if (
-              item.UserName.toLowerCase() ==
-              this.state.currentUserDetails.mail.toLowerCase()
-            ) {
-              tilesArray.push({ title: item.Title });
-            }
-          }
+              spgroup.length > 0 ? tilesArray.push({ title: item.Title }) : ""; 
         }
 
         this.setState({ tilesItems: tilesArray });
@@ -676,14 +662,34 @@ export default class AdseroTeamsManagement1 extends React.Component<
   }
 
   async loadProfilepics() {
-    await sp.web
-      .getFolderByServerRelativeUrl(profileListUrl)
-      .files.select("*,listItemAllFields")
-      .expand("listItemAllFields")
-      .get()
-      .then((proItems) => {
-        this.setState({ allProfilePics: proItems });
-      });
+    var userPhotoArray=[];
+    const allUsers = await graph.users().then(async(usersdet)=>{
+      usersdet.forEach(async(SelectedUserProfile)=>{
+        const specificUser = await graph.users.getById(SelectedUserProfile.mail).photo.getBlob().then((photo: any) => {
+          const url = window.URL;
+          const blobUrl = url.createObjectURL(photo);
+          var proObj={Image:blobUrl,email:SelectedUserProfile.mail};
+          userPhotoArray.push(proObj);
+        })
+        .catch((err) => {
+          var proObj={Image: "data:image/png;base64,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",email:SelectedUserProfile.mail};
+          userPhotoArray.push(proObj);
+          
+        });
+
+      })
+    });
+
+          this.setState({ allProfilePics: userPhotoArray });
+
+    // await sp.web
+    //   .getFolderByServerRelativeUrl(profileListUrl)
+    //   .files.select("*,listItemAllFields")
+    //   .expand("listItemAllFields")
+    //   .get()
+    //   .then((proItems) => {
+    //     this.setState({ allProfilePics: proItems });
+    //   });
   }
   async getbannerimage() {
     await sp.web
@@ -726,15 +732,16 @@ export default class AdseroTeamsManagement1 extends React.Component<
                 : (bmonth = addMonth);
               var bDate = new Date(bresponse.birthday).getDate() + "/" + bmonth;
               if (currentDate == bDate) {
-                const user1 = await sp.web.siteUsers
-                  .getByEmail(user.mail)
-                  .get()
-                  .then(async (userId) => {
-                    var profileUrl = this.state.allProfilePics.filter(
+                // const user1 = await sp.web.siteUsers
+                //   .getByEmail(user.mail)
+                //   .get()
+                //   .then(async (userId) => {
+                  var profileUrl=[];
+                     this.state.allProfilePics.filter(
                       (eachPro) => {
-                        return (
-                          eachPro.ListItemAllFields.UserNameId == userId.Id
-                        );
+                          if(eachPro.email== user.mail)
+                          profileUrl.push(eachPro)
+                        
                       }
                     );
 
@@ -742,13 +749,15 @@ export default class AdseroTeamsManagement1 extends React.Component<
                       id: birthdayArr.length + 1,
                       mail: user.mail,
                       displayname: user.displayName,
-                      src: profileUrl[0].ServerRelativeUrl,
+                      src: profileUrl[0].Image,
                       altText: "Happy Birthday " + user.displayName + "!",
                       info: `Today ${user.displayName}'s Birthday, Send Him a Great Wish.`,
                       caption: "Happy Birthday " + user.displayName + "!",
                     });
-                  });
+                  // });
               }
+            }).catch((err)=>{
+console.log(err)
             });
         }
         this.setState({ CarouselItems: birthdayArr, allUsers: allUserArray });
@@ -775,19 +784,34 @@ export default class AdseroTeamsManagement1 extends React.Component<
     this.setState({ activeIndex: newIndex });
   }
 
-  public capacityToggle = async () => {
-    const user1 = await sp.web.siteUsers
-      .getByEmail(this.state.currentUserDetails.mail)
-      .get()
-      .then(async (userId) => {
+  public AddeditCapacityToggle = async () => {
+
         var profileUrl = this.state.allProfilePics.filter((eachPro) => {
-          return eachPro.ListItemAllFields.UserNameId == userId.Id;
+          return eachPro.email == this.state.currentUserDetails.mail;
         });
         this.setState({
-          currentUserProfileUrl: profileUrl[0].ServerRelativeUrl,
-          showCapacityModal: !this.state.showCapacityModal
+          currentUserProfileUrl: profileUrl[0].Image,
+          showCapacityModal: !this.state.showCapacityModal,
         });
-      });
+
+  };
+
+  public capacityToggle = async () => {
+    // const user1 = await sp.web.siteUsers
+    //   .getByEmail(this.state.currentUserDetails.mail)
+    //   .get()
+    //   .then(async (userId) => {
+        var profileUrl = this.state.allProfilePics.filter((eachPro) => {
+          return eachPro.email == this.state.currentUserDetails.mail;
+        });
+        this.setState({
+          currentUserProfileUrl: profileUrl[0].Image,
+          showCapacityModal: !this.state.showCapacityModal,
+          capacityValue:"",
+          billable:"",
+          nonbillable:""
+        });
+      // });
   };
 
   public getbill = (e) => {
@@ -1173,7 +1197,7 @@ public clientSave = async () => {
                         <div className="tile-btn-section text-right">
                           <button
                             className="btn btn-sm btn-primary"
-                            onClick={this.capacityToggle}
+                            onClick={this.AddeditCapacityToggle}
                           >
                             Add / Edit
                           </button>
@@ -1227,7 +1251,7 @@ public clientSave = async () => {
                        </div>  
                      </div>
                    </div>:""
-                  );
+                  );                        
                 })
               : <h4>No Tabs to Display</h4>}
           </div>
@@ -1237,9 +1261,12 @@ public clientSave = async () => {
           toggle={this.capacityToggle}
           className="capacity-modal"
         > 
-          <ModalHeader toggle={this.capacityToggle} className="text-center">
-            Add or Edit Allocation
+        <div className="modal-header-section"> 
+          <ModalHeader toggle={this.capacityToggle} className="text-center addeditallocation">
+            Add or Edit Allocation  
           </ModalHeader>
+          <div className="ragylogo"></div>
+          </div>
           <ModalBody>   
             <div className="cur-user-info text-right">
               <span>Hi, {this.state.currentUserDetails.displayName}</span>
@@ -1330,17 +1357,21 @@ public clientSave = async () => {
             >
               Submit
             </Button>{" "}
-          </ModalFooter>
+          </ModalFooter>    
         </Modal>
         <Modal 
           isOpen={this.state.showIntakeModal}
           toggle={()=>this.setState({showIntakeModal:false})}
           className="client-intake-modal" 
-        > 
+        >
+          <div className="modal-header-section">  
           <ModalHeader  className="text-center">
-            Add Client Intake
+            Add Client Intake 
           </ModalHeader>
+          <div className="ragylogo"></div>
+          </div>  
           <ModalBody>
+          
     <div className="form-container-fluid">
     <div className="row">
     <div className="col-sm-12">
@@ -1358,7 +1389,7 @@ public clientSave = async () => {
     </div>
     </div>
     </div>
-    
+
     <div className="row" style={{display:"none"}}>
     <div className="col-sm-6 main-left-column">
     <div className="row">

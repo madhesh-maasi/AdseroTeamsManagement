@@ -74,6 +74,7 @@ export interface IClientIntakeDashBoardState {
 var AdverseNameRender = "";
 var SignAdverseRender = "";
 var NonAdverseRender = "";
+var gridApi;
   export default class AdseroTeamsManagement extends React.Component<
   IClientIntakeDashBoardProps,
   IClientIntakeDashBoardState
@@ -84,8 +85,7 @@ var NonAdverseRender = "";
     super(props);
     sp.setup({
       sp: {
-              // baseUrl: "https://adserolegal.sharepoint.com/sites/dev", //for live
-              baseUrl: "https://chandrudemo.sharepoint.com/sites/ADSERO", //for dev
+              baseUrl: this.props.siteUrl, //for dev
       },
     });    
     this.state = { 
@@ -100,7 +100,7 @@ var NonAdverseRender = "";
         showviewIntakeModal:false,
         viewMultiData:"",
         filterText:"",
-        perpageCount:10,
+        perpageCount:20,
         IntakeCopyTableItems:[] 
     };
 
@@ -885,7 +885,7 @@ public onFirstDataRendered = (params) => {
   params.api.sizeColumnsToFit();
 };
 public onGridReady(params) {
-  var gridApi = params.api;
+   gridApi = params.api;
   var columnApi = params.columnApi;
 
   var allColumnIds = [];
@@ -914,6 +914,13 @@ public getRowStyle = params => {
       return { background: 'White' };
     }
 };
+
+public onPageSizeChanged=()=>{
+  var value = document.getElementById('page-size')["value"];
+  // this.setState({perpageCount:Number(value)});
+  gridApi.paginationSetPageSize(Number(value));
+
+}
 
 public multiselect =(selected)=>{
 console.log(selected);
@@ -963,6 +970,13 @@ else
                 </div>
                 <div className="datatable-section">
               <div className="ag-theme-alpine" style={ { height:519 } }>
+              <p>Page Size:</p>
+              <select onChange={()=>this.onPageSizeChanged()} id={"page-size"}>
+                <option value="10" selected>10</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+              </select>
               <AgGridReact
               onGridReady={this.onGridReady}
               getRowStyle={this.getRowStyle}
@@ -977,10 +991,13 @@ else
           isOpen={this.state.showeditIntakeModal}
           toggle={()=>this.setState({showeditIntakeModal:!this.state.showeditIntakeModal})}
           
-        >
+        > 
+        <div className="modal-header-section"> 
           <ModalHeader toggle={()=>this.setState({showeditIntakeModal:!this.state.showeditIntakeModal})} className="text-center">
             Edit Client Intake
           </ModalHeader>
+          <div className="ragylogo"></div>
+          </div>
           <ModalBody>
           <div className="form-container-fluid">
     <div className="row">
@@ -1035,15 +1052,17 @@ else
             </Button>{" "}
           </ModalFooter>
         </Modal>
-
         <Modal
           isOpen={this.state.showviewIntakeModal}
           toggle={()=>this.setState({showviewIntakeModal:!this.state.showviewIntakeModal})}
           className="client-intake-view-modal"
         >
+          <div className="modal-header-section"> 
           <ModalHeader toggle={()=>this.setState({showviewIntakeModal:!this.state.showviewIntakeModal})} className="text-center">
-            View Client Intake
+            View Client Intake 
           </ModalHeader>
+          <div className="ragylogo"></div>
+          </div>
           <ModalBody>
     <div className="form-container-fluid">
 
