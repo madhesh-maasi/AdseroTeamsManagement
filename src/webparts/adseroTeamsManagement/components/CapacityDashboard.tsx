@@ -388,7 +388,7 @@ export default class AdseroTeamsManagement extends React.Component<
                 <div>
                   <h3>Allocation Dashboard</h3>
                 </div>
-                <div className="startDate">
+                <div className="capacityStartDate startDate">
                 <label>Date</label>
                 <DatePicker
                   id="dashstartdatepicker"
@@ -396,7 +396,7 @@ export default class AdseroTeamsManagement extends React.Component<
                   value={this.state.dashStartDate}
                   onChange={(v, f) => this.dashStartDateChange(v, f)}
                 />
-              </div> 
+              </div>
 
               <div className="generate-btn">
                 <button
