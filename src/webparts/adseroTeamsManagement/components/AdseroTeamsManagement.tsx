@@ -71,6 +71,9 @@ export interface IcarosuelState {
   ClientIntakereadUser:boolean;
   ClientIntakeRepUser:Boolean;
   BannerImage:string;
+  capacityAdmin:boolean;
+  capacityEmployee:boolean;
+  capacityData:any;
 
 }
 var slides = [];
@@ -145,10 +148,13 @@ export default class AdseroTeamsManagement1 extends React.Component<
       ClientIntakereadUser:false,
       ClientIntakeRepUser:false,
       BannerImage:"",
+      capacityAdmin:false,
+      capacityEmployee:false,
+      capacityData:[]
     };
     
     this.loadProfilepics();
-    this.loadUsersBirthday();
+    // this.loadUsersBirthday();
     this.getCurrentUserDetails();
     this.getbannerimage();
     $(document).on("click", "#btnClient", function (e) {
@@ -617,6 +623,7 @@ export default class AdseroTeamsManagement1 extends React.Component<
         capacityValue: filteredData[0].CapacityLevel,
         capacityEditFlag: true,
         CapacityEditId: filteredData[0].ID,
+        capacityData:filteredData
       });
     }
   }
@@ -652,6 +659,10 @@ export default class AdseroTeamsManagement1 extends React.Component<
         for (let i = 0; i < allConfigs.length; i++) {
           var item = allConfigs[i];
           var spgroup = this.state.currentUserGroups.filter((g) => {
+            if(g.Title=="Capacity Management Admin")
+            this.setState({capacityAdmin:true})
+            else if(g.Title=="Capacity Management Employee")
+            this.setState({capacityEmployee:true})
                 return item.SharePointGroupName.indexOf(g.Title)!=-1;
               });
               spgroup.length > 0 ? tilesArray.push({ title: item.Title }) : ""; 
@@ -663,33 +674,39 @@ export default class AdseroTeamsManagement1 extends React.Component<
 
   async loadProfilepics() {
     var userPhotoArray=[];
-    const allUsers = await graph.users().then(async(usersdet)=>{
-      usersdet.forEach(async(SelectedUserProfile)=>{
-        const specificUser = await graph.users.getById(SelectedUserProfile.mail).photo.getBlob().then((photo: any) => {
-          const url = window.URL;
-          const blobUrl = url.createObjectURL(photo);
-          var proObj={Image:blobUrl,email:SelectedUserProfile.mail};
+    // const allUsers = await graph.users().then(async(usersdet)=>{
+    //   usersdet.forEach(async(SelectedUserProfile)=>{
+    //     const specificUser = await graph.users.getById(SelectedUserProfile.mail).photo.getBlob().then((photo: any) => {
+    //       const url = window.URL;
+    //       const blobUrl = url.createObjectURL(photo);
+    //       var proObj={Image:blobUrl,email:SelectedUserProfile.mail};
+    //       userPhotoArray.push(proObj);
+    //     })
+    //     .catch((err) => {
+    //       var proObj={Image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWgAAAFoCAMAAABNO5HnAAAAvVBMVEXh4eGjo6OkpKSpqamrq6vg4ODc3Nzd3d2lpaXf39/T09PU1NTBwcHOzs7ExMS8vLysrKy+vr7R0dHFxcXX19e5ubmzs7O6urrZ2dmnp6fLy8vHx8fY2NjMzMywsLDAwMDa2trV1dWysrLIyMi0tLTCwsLKysrNzc2mpqbJycnQ0NC/v7+tra2qqqrDw8OoqKjGxsa9vb3Pz8+1tbW3t7eurq7e3t62travr6+xsbHS0tK4uLi7u7vW1tbb29sZe/uLAAAG2UlEQVR4XuzcV47dSAyG0Z+KN+ccO+ecHfe/rBl4DMNtd/cNUtXD6DtLIAhCpMiSXwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIhHnfm0cVirHTam884sVu6Q1GvPkf0heq7VE+UF5bt2y97Vat+VlRniev/EVjjp12NlgdEytLWEy5G2hepDYOt7qGob2L23Dd3valPY6dsW+jvaBOKrkm2ldBVrbag+2tYeq1oX6RxYBsF6SY3vA8to8F0roRJaZmFFK2ASWA6CiT6EhuWkoQ9gablZ6l1oW47aWoF8dpvT6FrOunoD5pa7uf6CaslyV6rqD0guzYHLRK/hwJw40Cu4MUdu9Bt8C8yR4Jt+gRbmzEKvUTicFw8kY3NonOg/aJpTTf2AWWBOBTNBkvrmWF+QNDPnZoLUNOeagpKSOVdKhK550BVa5kGLOFfMCxY92ubFuYouNC9CFdyuebKrYrsyL9hcGpgnAxVaXDJPSrGKrGreVFVkU/NmykDJj1sV2Z55s0e74hwtS9k8KvNzxY8ZozvX+L67M4/uVFwT84Kt9CPz6EjFdUqgMyCjCTSHWD4cq7jOzKMzxtGu8ddwxzzaUXHFgXkTxCqwyLyJOON0j9POc/OCpbAj+hU/Zsz9Pbk2T65VbM/mybOKbd882VexjegLPXk0L154uvF/tR5N7RjJB9bvBsLEPJgI5dCcC2P5wL3QlSClJ+bYSSpIqpljh4IkpWNzapzqB3T9vCGBuGUOtWL9hDNPizMYmjND/QIloTkSJvKB4tHRK1iaE0u9hnhgDgxi/QFJZLmLEv0FvbHlbNzTG9ApWa5KHb0J9cByFNT1DhznGOngWO9CvWQ5KdX1AXweWy7Gn/Uh9CLLQdTTCkgPLLODVCshPrSMarHWgUpkGURrl2c83drWbp+0PlRebCsvFW0G+6FtLNzXxlDuXttGrrtlbQPlacvW1ppmCDPOHgJbQ/BwpmyQnh6siHVwcJoqB3iqNx/tHY/N+pPyg7Rz83Xv0n5zuff1ppPKCSS9audf1V6i9QAAAAAAAAAAAAAAAAAAAAAAEMdyAuVeZ9I4H95/uojGgf0QjKOLT/fD88ak0ysrI6SVo9qXRWgrhIsvtaNKqs2hXNlvD0LbSDho71fKWhsxvulf2NYu+jcro42d+e0isMyCxe18R2/D6HQYWY6i4elIryE9brbMgVbzONVP2G3sBeZMsNfYFf5h715302aDIADP2Lw+CIdDQhKcGuIgKKSIk1MSMND7v6zvBvqprdqY3bWfS1itRto/O+52t+KnW+2+OdSYK+5TViS9LxxqyX07p6xUeq7hXl+WPq/AX15QI+9fDryaw5d31EP7HPGqonMb5rmvYwow/upgWTDzKYQ/C2BV3o8oSNTPYVH26FEY7zGDNfnZo0DeOYclwc6jUN4ugBVxZ0HBFp0YJoxaFK41gn7ZGxWYZtDNrSOqEK0dFLscqMbhArXuIioS3UGnHw9U5uEHFCp9quOXUGfrUSFvC11cl0p1nbK+KwHs92yFYyo2DqFEsKdq+wAqhHsqtw+hQHykescY4rnvNOC7g3TPNOEZwt3QiBuINkxpRDqEZFOaMYVgTzTkCWKFGxqyCSHVkqYsIVQQ0ZQogEwJjUkgkvNpjO8g0ZzmzCHRieacIJBLaU7qIE+bBrUhz5YGbSHPmQadIc+EBk0gT48G9SDPPQ06QZ5gQ3M2AQQa0ZwRqtCExz1kClc0ZRVCqFuacguxEhqSQC53pBlHB8HyDY3Y5BDttgnoinRoQgfinZrTuxrxgeodYiiQ+1TOz6HCy4KqLV6gREHVCqjxSsVeociaaq2hyjOVeoYyXarUhTrdZs4VeaQ6j9DIdZsXEhXpU5U+1EqoSALFtlRjC9VGHlXwRlCuTKlAWkK9rEfxehkMCB8o3EMIE1yfovUdrHiKKFb0BEMuPQrVu8CU9xNFOr3DmtcFxVm8wqBsTGHGGUxya4+CeGsHqwZjijEewDAn5Rt9dOdgWzZt6kAqMm/xylpz1EI8i3hF0SxGXQxPvJrTEHXyMuVVTF9QN+WElZuUqKPiyEodC9RV+cbKvJWos0E1TbTe4wB1l89W/GSrWY4G4G4+NUHebhwEkGGYtPgpWskQAkjSXvr8x/xlGz/RKHcr/jOrXYn/1bh0Jh7/mjfpXPALjXC+O/Av7HfzEL+nERbJZME/tpgkRYg/1Mjms48Wf1PrYzbPIIBW8aDY9j/2vsef8vz9R39bDOL/2qlDIwCBGACCOMTLl4klOpP+i4MimFe7DZy7v3rcuaYqej+f3VE1K09+AgAAAAAAAAAAAAAAAAAAAAAAgBf6wsTW1jN3CAAAAABJRU5ErkJggg==",email:SelectedUserProfile.mail};
+    //       userPhotoArray.push(proObj);
+          
+    //     });
+
+    //   })
+    // });
+
+          // this.setState({ allProfilePics: userPhotoArray });
+
+    await sp.web
+      .getFolderByServerRelativeUrl(profileListUrl)
+      .files.select("*,listItemAllFields")
+      .expand("listItemAllFields")
+      .get()
+      .then((proItems) => {
+        proItems.map((img)=>{
+          var proObj={Image:img.ServerRelativeUrl,email:img["ListItemAllFields"]["UserName"],birthday:img["ListItemAllFields"].DateOfBirth,displayName:img["ListItemAllFields"]["UserDisplayName"]};
           userPhotoArray.push(proObj);
         })
-        .catch((err) => {
-          var proObj={Image: "data:image/png;base64,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",email:SelectedUserProfile.mail};
-          userPhotoArray.push(proObj);
-          
-        });
+        this.setState({ allProfilePics: userPhotoArray });
+    this.loadUsersBirthday();
 
-      })
-    });
-
-          this.setState({ allProfilePics: userPhotoArray });
-
-    // await sp.web
-    //   .getFolderByServerRelativeUrl(profileListUrl)
-    //   .files.select("*,listItemAllFields")
-    //   .expand("listItemAllFields")
-    //   .get()
-    //   .then((proItems) => {
-    //     this.setState({ allProfilePics: proItems });
-    //   });
+      });
   }
   async getbannerimage() {
     await sp.web
@@ -698,70 +715,108 @@ export default class AdseroTeamsManagement1 extends React.Component<
       .expand("listItemAllFields")
       .get()
       .then((bannerimg) => {
-        this.setState({BannerImage: bannerimg[0].ServerRelativeUrl});
+       var bannerSec= bannerimg.filter((i)=>i["ListItemAllFields"].ImageType=="Banner")
+        this.setState({BannerImage: bannerSec[0].ServerRelativeUrl});
         
       });
   }
-  public loadUsersBirthday = () => {
-    this.props.graphClient
-      .api("/users")
-      .select("mail,displayName,Id")
-      .filter("userType eq 'Member'")
-      .get(async (error, response) => {
-        var allUserArray = response.value.filter((m) => m.mail != null);
-        var user;
-        var birthdayArr = [];
-        var month = "";
-        var addMonth = new Date().getMonth() + 1;
-        new Date().getMonth() < 10
-          ? (month = "0" + addMonth)
-          : (month = addMonth.toString());
-        var currentDate = new Date().getDate() + "/" + month;
+  public loadUsersBirthday = async() => {
+    var todayDate= new Date();
+    todayDate.setFullYear(2000);
 
-        for (let i = 0; i < allUserArray.length; i++) {
-          user = allUserArray[i];
-          await this.props.graphClient
-            .api("/users/" + user.mail + "/")
-            .select("birthday")
-            .get()
-            .then(async (bresponse, error) => {
-              var bmonth: any;
-              var addMonth = new Date(bresponse.birthday).getMonth() + 1;
-              new Date(bresponse.birthday).getMonth() + 1 < 10
-                ? (bmonth = "0" + addMonth)
-                : (bmonth = addMonth);
-              var bDate = new Date(bresponse.birthday).getDate() + "/" + bmonth;
-              if (currentDate == bDate) {
-                // const user1 = await sp.web.siteUsers
-                //   .getByEmail(user.mail)
-                //   .get()
-                //   .then(async (userId) => {
-                  var profileUrl=[];
-                     this.state.allProfilePics.filter(
-                      (eachPro) => {
-                          if(eachPro.email== user.mail)
-                          profileUrl.push(eachPro)
-                        
-                      }
-                    );
+    var month = "";
+    var addDate="";
+    var addMonth = todayDate.getMonth() + 1;
+   todayDate.getDate()<10?addDate= "0" + todayDate.getDate():addDate=  todayDate.getDate().toString()
+    todayDate.getMonth() < 10
+      ? (month = "0" + addMonth)
+      : (month = addMonth.toString());
+    var formatteddate=addDate + "-" +month+ "-2000" 
 
-                    await birthdayArr.push({
-                      id: birthdayArr.length + 1,
-                      mail: user.mail,
-                      displayname: user.displayName,
-                      src: profileUrl[0].Image,
-                      altText: "Happy Birthday " + user.displayName + "!",
-                      info: `Today ${user.displayName}'s Birthday, Send Him a Great Wish.`,
-                      caption: "Happy Birthday " + user.displayName + "!",
-                    });
-                  // });
+  
+      var profileUrl=[];
+      var birthdayArr = [];
+
+        this.state.allProfilePics.filter(
+          (eachPro) => {
+              if(eachPro.birthday== formatteddate)
+              {
+                birthdayArr.push({
+                  id: birthdayArr.length + 1,
+                  mail: eachPro.email,
+                  displayname: eachPro.displayName,
+                  src: eachPro.Image,
+                  altText: "Happy Birthday " + eachPro.displayName + "!",
+                  info: `Today ${eachPro.displayName}'s Birthday, Send Him a Great Wish.`,
+                  caption: "Happy Birthday " + eachPro.displayName + "!",
+                });
               }
-            }).catch((err)=>{
-console.log(err)
-            });
-        }
-        this.setState({ CarouselItems: birthdayArr, allUsers: allUserArray });
-      });
+              
+              // profileUrl.push(eachPro)
+            
+          }
+        );
+      
+        this.setState({ CarouselItems: birthdayArr });
+      
+
+//     this.props.graphClient
+//       .api("/users")
+//       .select("mail,displayName,Id")
+//       .filter("userType eq 'Member'")
+//       .get(async (error, response) => {
+//         var allUserArray = response.value.filter((m) => m.mail != null);
+//         var user;
+//         var month = "";
+//         var addMonth = new Date().getMonth() + 1;
+//         new Date().getMonth() < 10
+//           ? (month = "0" + addMonth)
+//           : (month = addMonth.toString());
+//         var currentDate = new Date().getDate() + "/" + month;
+
+//         for (let i = 0; i < allUserArray.length; i++) {
+//           user = allUserArray[i];
+//           await this.props.graphClient
+//             .api("/users/" + user.mail + "/")
+//             .select("birthday")
+//             .get()
+//             .then(async (bresponse, error) => {
+//               var bmonth: any;
+//               var addMonth = new Date(bresponse.birthday).getMonth() + 1;
+//               new Date(bresponse.birthday).getMonth() + 1 < 10
+//                 ? (bmonth = "0" + addMonth)
+//                 : (bmonth = addMonth);
+//               var bDate = new Date(bresponse.birthday).getDate() + "/" + bmonth;
+//               if (currentDate == bDate) {
+//                 // const user1 = await sp.web.siteUsers
+//                 //   .getByEmail(user.mail)
+//                 //   .get()
+//                 //   .then(async (userId) => {
+//                   var profileUrl=[];
+//                      this.state.allProfilePics.filter(
+//                       (eachPro) => {
+//                           if(eachPro.email== user.mail)
+//                           profileUrl.push(eachPro)
+                        
+//                       }
+//                     );
+
+//                     await birthdayArr.push({
+//                       id: birthdayArr.length + 1,
+//                       mail: user.mail,
+//                       displayname: user.displayName,
+//                       src: profileUrl[0].Image,
+//                       altText: "Happy Birthday " + user.displayName + "!",
+//                       info: `Today ${user.displayName}'s Birthday, Send Him a Great Wish.`,
+//                       caption: "Happy Birthday " + user.displayName + "!",
+//                     });
+//                   // });
+//               }
+//             }).catch((err)=>{
+// console.log(err)
+//             });
+//         }
+//       });
   };
 
   public next(this) {
@@ -789,10 +844,27 @@ console.log(err)
         var profileUrl = this.state.allProfilePics.filter((eachPro) => {
           return eachPro.email == this.state.currentUserDetails.mail;
         });
-        this.setState({
-          currentUserProfileUrl: profileUrl[0].Image,
-          showCapacityModal: !this.state.showCapacityModal,
-        });
+if(this.state.capacityData.length == 0)
+{
+  this.setState({
+    currentUserProfileUrl: profileUrl[0].Image,
+    showCapacityModal: !this.state.showCapacityModal,
+    capacityValue:"",
+    billable:"",
+    nonbillable:""
+  });
+}
+else
+{
+  this.setState({
+    currentUserProfileUrl: profileUrl[0].Image,
+    showCapacityModal: !this.state.showCapacityModal,
+    capacityValue:this.state.capacityData[0].CapacityLevel,
+    billable:this.state.capacityData[0].Billable,
+    nonbillable:this.state.capacityData[0].NonBillable
+  });
+}
+
 
   };
 
@@ -1183,7 +1255,7 @@ public clientSave = async () => {
             {this.state.tilesItems.length > 0
               ? this.state.tilesItems.map((tItems) => { 
                 return (
-                tItems.title=="Capacity Management System"?
+                tItems.title=="Capacity Management System"&&(this.state.capacityAdmin||this.state.capacityEmployee)?
                  
                     <div className="col-sm-12 col-md-6 col-lg-4 col-xl-3">
                       <div className="tile">
@@ -1211,17 +1283,18 @@ public clientSave = async () => {
                           >
                             Dashboard
                           </button>
-                          <button className="btn btn-sm btn-primary"
+                          {this.state.capacityAdmin?  <button className="btn btn-sm btn-primary"
                           onClick={() =>{
                             this.setState({ landingActive: false,pageSwitch:"Summary"});
                           console.log(this.state.pageSwitch);
                           }
                           }>
                             Summary
-                          </button>
+                          </button>:""}
+                        
                         </div>
                       </div>
-                    </div>:tItems.title=="Client Intake Management"?
+                    </div>:tItems.title=="Client Intake Management"&&(this.state.ClientIntakeAdmin||this.state.ClientIntakeRepUser||this.state.ClientIntakereadUser)?
                      <div className="col-sm-12 col-md-6 col-lg-4 col-xl-3">
                      <div className="tile">
                        <div className="tile-title-section">
