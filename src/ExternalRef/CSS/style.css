@@ -98,11 +98,13 @@
 }
 .caro-image {
   height: 140px;
-  width: 180px;
+  width: 160px;
+  margin: auto;
 }
 .caro-image img {
   height: 140px;
-  width: 180px;
+  width: 160px;
+  margin: auto;
 }
 /* .right {
   max-width: 20% !important;
@@ -425,13 +427,13 @@ div[data-tag="allowRowEvents"] {
   color: #b38c58;
 }
 .nav-back {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   background: url(../Images/backnav.png);
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
-  margin: 20px;
+  margin: 3px 20px;
   cursor: pointer !important;
 }
 .rdt_TableHeader {
@@ -1501,20 +1503,15 @@ p.goodsresult {
   .dropdown {
     width: 222px;
   }
- 
-  .ragylogo{
-    width: 96px!important;
+
+  .ragylogo {
+    width: 96px !important;
     height: 58px !important;
     margin-top: 10px;
     background-repeat: no-repeat;
     background-position: 50%;
     background-size: contain;
-
-}
-
-
- 
-
+  }
 }
 
 @media screen and (max-width: 414px) and (min-width: 362px) {
@@ -1530,15 +1527,14 @@ p.goodsresult {
   input.search-input.form-control-lg.form-control {
     width: 100%;
   }
-  .ragylogo{
-    width: 96px!important;
+  .ragylogo {
+    width: 96px !important;
     height: 58px !important;
     margin-top: 10px;
     background-repeat: no-repeat;
     background-position: 50%;
     background-size: contain;
-}
-
+  }
 }
 @media screen and (max-width: 601px) and (min-width: 414px) {
   .dropdown {
@@ -1554,15 +1550,14 @@ p.goodsresult {
     width: 100% !important;
   }
 
-.ragylogo{
-   width: 96px;
+  .ragylogo {
+    width: 96px;
     height: 58px;
     margin-top: 10px;
     background-repeat: no-repeat;
     background-position: 50%;
     background-size: contain;
-
-}
+  }
 }
 .banner-image .carousel-indicators {
   margin-bottom: 0;
@@ -1585,12 +1580,12 @@ input#rdp-form-control-dashstartdatepicker {
 .dashboard-head h3 {
   padding-right: 60px;
 }
-.modal-header-section{
+.modal-header-section {
   display: flex;
   justify-content: space-between;
   margin-left: 15px;
 }
-.ragylogo{
+.ragylogo {
   background-image: url(../Images/AdseroBlacknew.png);
   /* position: absolute; */
   margin-top: 10px;
@@ -1601,3 +1596,15 @@ input#rdp-form-control-dashstartdatepicker {
   background-size: contain;
 }
 
+.ag-theme-alpine p,
+.ag-theme-alpine select {
+  display: inline-block;
+  margin-right: 10px;
+}
+.capacityStartDate label {
+  margin-right: 8px;
+}
+select#page-size {
+  border-radius: 0 !important;
+  border: 1px solid #e0e4e8;
+}
