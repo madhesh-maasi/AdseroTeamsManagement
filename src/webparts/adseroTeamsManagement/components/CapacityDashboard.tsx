@@ -192,27 +192,30 @@ export default class AdseroTeamsManagement extends React.Component<
     console.log(this.state.capselectedUsermail);
     console.log(this.state.StartDateValue);
 
-    if (this.state.allpeoplePicker_User.length == 0) {
-      alertify.message("Please enter the user name.");
-      this.setState({
-        CapShowChart: false,
-        CapacityChartData: {},
-      });
-    } else if (!this.state.StartDateValue) {
+    // if (this.state.allpeoplePicker_User.length == 0) {
+    //   alertify.message("Please enter the user name.");
+    //   this.setState({
+    //     CapShowChart: false,
+    //     CapacityChartData: {},
+    //   });
+    // } 
+     if (!this.state.StartDateValue) {
       alertify.message("Please enter Start Date");
       this.setState({
         CapShowChart: false,
         CapacityChartData: {},
       });
-    } else if (!this.state.EndDateValue) {
-      alertify.message("Please enter End Date");
-      this.setState({
-        CapShowChart: false,
-        CapacityChartData: {},
-      });
-    } else if (
-      Date.parse(this.state.StartDateValue) >
-      Date.parse(this.state.EndDateValue)
+    }
+    //  else if (!this.state.EndDateValue) {
+    //   alertify.message("Please enter End Date");
+    //   this.setState({
+    //     CapShowChart: false,
+    //     CapacityChartData: {},
+    //   });
+    // }
+     else if (
+      (Date.parse(this.state.StartDateValue) >
+      Date.parse(this.state.EndDateValue))&&this.state.EndDateValue
     ) {
       alertify.message("Start Date Should be smaller than end date");
       this.setState({
@@ -220,12 +223,49 @@ export default class AdseroTeamsManagement extends React.Component<
         CapacityChartData: {},
       });
     } else {
-      var startDateValue =
+      var filterQuery=""
+
+       if(this.state.allpeoplePicker_User.length>0&&this.state.StartDateValue&&this.state.EndDateValue) 
+       {
+        var startDateValue =
         new Date(this.state.StartDateValue).toISOString().split("T")[0] +
         "T00:00:00";
       var EndDateValue =
         new Date(this.state.EndDateValue).toISOString().split("T")[0] +
         "T23:59:00";
+        filterQuery=`Created ge datetime'${startDateValue}' and Created le datetime'${EndDateValue}' and Author/EMail eq '${this.state.capselectedUsermail}'`
+       }
+       else if(this.state.allpeoplePicker_User.length>0&&this.state.StartDateValue) 
+       {
+        var startDateValue =
+        new Date(this.state.StartDateValue).toISOString().split("T")[0] +
+        "T00:00:00";
+      var EndDateValue =
+        new Date(this.state.StartDateValue).toISOString().split("T")[0] +
+        "T23:59:00";
+        filterQuery=`Created ge datetime'${startDateValue}' and Created le datetime'${EndDateValue}' and Author/EMail eq '${this.state.capselectedUsermail}'`
+       }
+       else if(this.state.allpeoplePicker_User.length==0&&this.state.StartDateValue&&this.state.EndDateValue)
+       {
+        var startDateValue =
+        new Date(this.state.StartDateValue).toISOString().split("T")[0] +
+        "T00:00:00";
+      var EndDateValue =
+        new Date(this.state.EndDateValue).toISOString().split("T")[0] +
+        "T23:59:00";
+        filterQuery=`Created ge datetime'${startDateValue}' and Created le datetime'${EndDateValue}'`
+       }
+       else if(this.state.allpeoplePicker_User.length==0&&this.state.StartDateValue)
+       {
+        var startDateValue =
+        new Date(this.state.StartDateValue).toISOString().split("T")[0] +
+        "T00:00:00";
+      var EndDateValue =
+        new Date(this.state.StartDateValue).toISOString().split("T")[0] +
+        "T23:59:00";
+        filterQuery=`Created ge datetime'${startDateValue}' and Created le datetime'${EndDateValue}'`
+       }
+      
       await sp.web.lists
         .getByTitle("CapacityManagement")
         .items.select(
@@ -240,7 +280,7 @@ export default class AdseroTeamsManagement extends React.Component<
         )
         .expand("Author")
         .filter(
-          `Created ge datetime'${startDateValue}' and Created le datetime'${EndDateValue}' and Author/EMail eq '${this.state.capselectedUsermail}'`
+          filterQuery
         )
         .get()
         .then((item: any) => {

@@ -26,7 +26,7 @@ export default class AdseroTeamsManagementWebPart extends BaseClientSideWebPart<
             description: this.properties.description,
             context: this.context,
             graphClient: _graphClient,
-            // siteUrl: "https://adserolegal.sharepoint.com/sites/dev/", //for liv
+          //  siteUrl: "https://adserolegal.sharepoint.com/sites/dev/", //for liv
             siteUrl: "https://chandrudemo.sharepoint.com/sites/ADSERO/", //for dev
 
       }

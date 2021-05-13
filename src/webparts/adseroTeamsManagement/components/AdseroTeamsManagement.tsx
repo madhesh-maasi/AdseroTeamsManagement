@@ -43,7 +43,7 @@ import ClientIntakeDashboard from "./ClientIntakeDashBoard";
 //for dev
 var profileListUrl = "/sites/adsero/ProfilePictures/";
 var SiteImageUrl = "/sites/adsero/SiteImages/";
-//for liv
+// //for liv
 // var profileListUrl = "/sites/dev/ProfilePictures/";
 // var SiteImageUrl = "/sites/dev/SiteImages/";
 // import { BsPlus } from "react-icons/bs"; 
@@ -580,7 +580,8 @@ export default class AdseroTeamsManagement1 extends React.Component<
         })
         .then( () => {
           alertify.message("Record Created Successfully");
-          this.setState({showIntakeModal:false})
+          this.fetchclientdetails();
+          this.setState({showIntakeModal:false});
         }).catch( (e)=>{
            alertify.message("something went wrong.please contact system admin");
           this.setState({showIntakeModal:false})
@@ -851,7 +852,7 @@ if(this.state.capacityData.length == 0)
     showCapacityModal: !this.state.showCapacityModal,
     capacityValue:"",
     billable:"",
-    nonbillable:""
+    nonbillable:"" 
   });
 }
 else
