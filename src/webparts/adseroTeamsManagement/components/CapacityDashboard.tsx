@@ -265,7 +265,7 @@ export default class AdseroTeamsManagement extends React.Component<
         "T23:59:00";
         filterQuery=`Created ge datetime'${startDateValue}' and Created le datetime'${EndDateValue}'`
        }
-      
+         
       await sp.web.lists
         .getByTitle("CapacityManagement")
         .items.select(
@@ -287,8 +287,17 @@ export default class AdseroTeamsManagement extends React.Component<
           (item.length>0)
          ?
             this.setState({
+              
               CapShowChart: true,
               CapacityChartData: {
+                options: {
+                  responsive: true,
+                   
+                    legend: {
+                      position: 'right'
+                    } 
+                  
+                },
                 labels: ["Full", "Medium", "Low", "Off"],
                 datasets: [
                   {
@@ -414,7 +423,9 @@ export default class AdseroTeamsManagement extends React.Component<
   }
   public render(): React.ReactElement<ICapacityDashBoardProps> {
     return !this.state.MoveToLanding ? (
+      
       <>
+      <div className="loader"><div className="loading"></div>  </div>
         <div
           className="nav-back"
           onClick={() => {

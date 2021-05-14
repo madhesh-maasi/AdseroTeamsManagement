@@ -1608,3 +1608,45 @@ select#page-size {
   border-radius: 0 !important;
   border: 1px solid #e0e4e8;
 }
+canvas.chartjs-render-monitor {
+  width: 850px !important;
+  height: 425px !important;
+  margin: auto;
+}
+.ag-cell {
+  padding: 10px;
+}
+.loading {
+  height: 0;
+  width: 0;
+  padding: 2rem;
+  border: 0.8rem solid #ccc;
+  border-right-color: #b4955f;
+  border-radius: 50%;
+  -webkit-animation: rotate 1s infinite linear;
+  /* left, top and position just for the demo! */
+  /* position: absolute;
+  left: 50%;
+  top: 50%; */
+  z-index: 10;
+}
+
+@-webkit-keyframes rotate {
+  /* 100% keyframe for  clockwise. 
+     use 0% instead for anticlockwise */
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+.loader {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  background: #fff;
+  z-index: 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
