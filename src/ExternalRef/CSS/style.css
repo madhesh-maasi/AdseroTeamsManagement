@@ -1614,30 +1614,9 @@ canvas.chartjs-render-monitor {
   margin: auto;
 }
 .ag-cell {
-  padding: 10px;
-}
-.loading {
-  height: 0;
-  width: 0;
-  padding: 2rem;
-  border: 0.8rem solid #ccc;
-  border-right-color: #b4955f;
-  border-radius: 50%;
-  -webkit-animation: rotate 1s infinite linear;
-  /* left, top and position just for the demo! */
-  /* position: absolute;
-  left: 50%;
-  top: 50%; */
-  z-index: 10;
+  padding: 7px;
 }
 
-@-webkit-keyframes rotate {
-  /* 100% keyframe for  clockwise. 
-     use 0% instead for anticlockwise */
-  100% {
-    -webkit-transform: rotate(360deg);
-  }
-}
 .loader {
   position: fixed;
   height: 100vh;
@@ -1649,4 +1628,52 @@ canvas.chartjs-render-monitor {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.loaderLogo {
+  width: 4rem;
+  height: 4rem;
+  background: url(../Images/SLogo.png);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.spin {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  margin: auto;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  border-top-color: #b4955f;
+  -webkit-animation: spin 1.5s infinite linear;
+  -moz-animation: spin 1.5s infinite linear;
+  -o-animation: spin 1.5s infinite linear;
+  animation: spin 1.5s infinite linear;
+}
+.spin::before {
+  content: "";
+  border: 3px solid transparent;
+  border-bottom-color: #b4955f;
+  border-radius: 60%;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  position: absolute;
+  animation-name: antispin;
+  animation-duration: 5000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+@keyframes antispin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

@@ -75,7 +75,8 @@ export interface ICapacityDashboardState {
   CapSelectedUserName: string;
   CapShowChart: Boolean;
   dashStartDate:string,
-  dashStartDateFormatedVal: string
+  dashStartDateFormatedVal: string,
+  chartOptions: any
 }
 var gridApi;
 export default class AdseroTeamsManagement extends React.Component<
@@ -107,7 +108,8 @@ export default class AdseroTeamsManagement extends React.Component<
       CapSelectedUserName: "",
       CapShowChart: false,
       dashStartDate:"",
-      dashStartDateFormatedVal: ""
+      dashStartDateFormatedVal: "",
+      chartOptions:{}
     };
 
     this._CapacityColumns= [
@@ -287,14 +289,19 @@ export default class AdseroTeamsManagement extends React.Component<
           (item.length>0)
          ?
             this.setState({
-              
+              chartOptions:  {responsive: true,// plugins: {
+                legend: {
+                  position: 'right'
+                } 
+              // }
+            },
               CapShowChart: true,
               CapacityChartData: {
                 options: {
                   responsive: true,
                    
                     legend: {
-                      position: 'right'
+                      position: 'right',
                     } 
                   
                 },
@@ -425,7 +432,7 @@ export default class AdseroTeamsManagement extends React.Component<
     return !this.state.MoveToLanding ? (
       
       <>
-      <div className="loader"><div className="loading"></div>  </div>
+      {/* <div className="loader"><div className="loading"></div>  </div> */}
         <div
           className="nav-back"
           onClick={() => {
@@ -577,7 +584,7 @@ export default class AdseroTeamsManagement extends React.Component<
               ) : (
                 <div>
                   <h2>{this.state.CapSelectedUserName}</h2>
-                  <Pie data={this.state.CapacityChartData} />
+                  <Pie data={this.state.CapacityChartData} options={this.state.chartOptions}/>
                 </div>
               )}
             </div>
