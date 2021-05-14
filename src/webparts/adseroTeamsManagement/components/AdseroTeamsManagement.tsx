@@ -609,9 +609,9 @@ export default class AdseroTeamsManagement1 extends React.Component<
         "Created",
         "ID"
       )
-      .expand("Author")
+      .expand("Author") 
       .filter(`Author/EMail eq '${this.state.currentUserDetails.mail}'`)
-      .get();
+      .get(); 
     // console.log(list);
     let filteredData = list.filter((li) => {
       return new Date(li.Created).toLocaleDateString() == d;
@@ -1179,14 +1179,20 @@ public clientSave = async () => {
   public render(): React.ReactElement<IAdseroTeamsManagementProps> {
     return this.state.landingActive ? (
       <div>  
+        {/* <div className="loader">
+          <div className="loader-cont">
+            <div className="spin"></div>
+            <div className="loaderLogo"></div>
+          </div>  
+        </div> */} 
         <div className="banner-section">
         <img src={this.state.BannerImage} className="banner-img" alt=""/>
         <Row className="banner-image">
           <Col md={{ size: 6 }} lg={{ size: 8 }} className="left">
-            <h2 className="banner-caps">Integrity. Respect. Trust</h2>
-          </Col>
-          {this.state.CarouselItems.length>0?
-          <Col
+            <h2 className="banner-caps">Integrity. Respect. Trust</h2> 
+          </Col> 
+          {this.state.CarouselItems.length>0? 
+          <Col 
             xs={{ size: 12 }}
             sm={{ size: 12 }}
             md={{ size: 3 }}
