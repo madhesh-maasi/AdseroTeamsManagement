@@ -74,6 +74,7 @@ export interface IcarosuelState {
   capacityAdmin:boolean;
   capacityEmployee:boolean;
   capacityData:any;
+  loader:string;
 
 }
 var slides = [];
@@ -150,7 +151,8 @@ export default class AdseroTeamsManagement1 extends React.Component<
       BannerImage:"",
       capacityAdmin:false,
       capacityEmployee:false,
-      capacityData:[]
+      capacityData:[],
+      loader:'block'
     };
     
     this.loadProfilepics();
@@ -669,7 +671,7 @@ export default class AdseroTeamsManagement1 extends React.Component<
               spgroup.length > 0 ? tilesArray.push({ title: item.Title }) : ""; 
         }
 
-        this.setState({ tilesItems: tilesArray });
+        this.setState({ tilesItems: tilesArray , loader:"none"});
       });
   }
 
@@ -1179,12 +1181,12 @@ public clientSave = async () => {
   public render(): React.ReactElement<IAdseroTeamsManagementProps> {
     return this.state.landingActive ? (
       <div>  
-        {/* <div className="loader">
+        <div className="loader" style={{display:this.state.loader}}>
           <div className="loader-cont">
             <div className="spin"></div>
             <div className="loaderLogo"></div>
           </div>  
-        </div> */} 
+        </div> 
         <div className="banner-section">
         <img src={this.state.BannerImage} className="banner-img" alt=""/>
         <Row className="banner-image">
