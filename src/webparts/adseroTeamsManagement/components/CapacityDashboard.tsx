@@ -291,20 +291,14 @@ export default class AdseroTeamsManagement extends React.Component<
             this.setState({
               chartOptions:  {responsive: true,// plugins: {
                 legend: {
-                  position: 'right'
-                } 
+                  position: 'center',
+                  align:'start'
+                }
               // }
             },
               CapShowChart: true,
               CapacityChartData: {
-                options: {
-                  responsive: true,
-                   
-                    legend: {
-                      position: 'right',
-                    } 
-                  
-                },
+            
                 labels: ["Full", "Medium", "Low", "Off"],
                 datasets: [
                   {
@@ -584,7 +578,7 @@ export default class AdseroTeamsManagement extends React.Component<
               ) : (
                 <div>
                   <h2>{this.state.CapSelectedUserName}</h2>
-                  <Pie data={this.state.CapacityChartData} options={this.state.chartOptions}/>
+                  <Pie data={this.state.CapacityChartData} />
                 </div>
               )}
             </div>
