@@ -152,7 +152,7 @@ export default class AdseroTeamsManagement1 extends React.Component<
       capacityAdmin:false,
       capacityEmployee:false,
       capacityData:[],
-      loader:'block'
+      loader:'flex'
     };
     
     this.loadProfilepics();
@@ -1176,12 +1176,12 @@ public clientSave = async () => {
   this.mandatoryvalidation();
 
 }  
-
+ 
   // TODO Rendering
   public render(): React.ReactElement<IAdseroTeamsManagementProps> {
     return this.state.landingActive ? (
       <div>  
-        <div className="loader" style={{display:this.state.loader}}>
+        <div className="loader" style={{display:this.state.loader}}> 
           <div className="loader-cont">
             <div className="spin"></div>
             <div className="loaderLogo"></div>
